@@ -1,3 +1,4 @@
+![CI](https://github.com/VineshReddyK/banking-rest-api-system/actions/workflows/ci.yml/badge.svg)
 # Banking REST API System
 
 ## Project Status
@@ -172,6 +173,14 @@ src/main/java/com/vinesh/banking
 * API Documentation: docs/api-endpoints.md
 
 ---
+
+## How to Run Locally
+
+```bash
+git clone https://github.com/VineshReddyK/banking-rest-api-system.git
+cd banking-rest-api-system
+mvn clean install
+mvn spring-boot:run
 
 ## Future Enhancements
 
