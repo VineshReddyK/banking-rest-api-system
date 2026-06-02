@@ -1,4 +1,2 @@
-package com.vinesh.banking.repository;
-
-public interface TransactionRepository {
+public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 }
