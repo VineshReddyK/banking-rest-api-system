@@ -1,1 +1,2 @@
-#placeholder
+public class ResourceNotFoundException extends RuntimeException {
+}
