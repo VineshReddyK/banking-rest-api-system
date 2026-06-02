@@ -6,6 +6,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Double amount;
-    private String transactionType;
+   private Double amount;
+private String transactionType;
+private LocalDateTime transactionDate;
 }
