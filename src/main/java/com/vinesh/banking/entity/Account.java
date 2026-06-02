@@ -8,6 +8,8 @@ public class Account {
 
     private String accountNumber;
     private Double balance;
+    public Account() {
+    }
     public Long getId() {
     return id;
 }
