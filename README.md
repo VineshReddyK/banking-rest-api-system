@@ -1,3 +1,6 @@
+## Project Status
+🚧 In Progress — Core Spring Boot project structure, entities, DTOs, repositories, services, controllers, and configuration files have been added.
+
 # Banking REST API System
 
 A production-ready banking backend application built using Java, Spring Boot, Spring Security, JWT, Hibernate, JPA, MySQL, Docker, and JUnit.
