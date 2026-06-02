@@ -1,5 +1,7 @@
 @Entity
 @Table(name = "transactions")
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Column;
 public class Transaction {
 
@@ -14,6 +16,16 @@ private String transactionType;
 
 @Column(nullable = false)
 private LocalDateTime transactionDate;
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
+    public Account getAccount() {
+    return account;
+}
+
+public void setAccount(Account account) {
+    this.account = account;
+}
     public Transaction() {
 }
     public Long getId() {
