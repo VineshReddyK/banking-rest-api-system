@@ -1,5 +1,2 @@
-package com.vinesh.banking.repository;
-
-public interface AccountRepository {
-
+public interface AccountRepository extends JpaRepository<Account, Long> {
 }
