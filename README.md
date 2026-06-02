@@ -1,68 +1,198 @@
+# Banking REST API System
+
 ## Project Status
-🚧 In Progress — Core Spring Boot project structure, entities, DTOs, repositories, services, controllers, and configuration files have been added.
+
+🚧 In Progress
+
+Completed:
+
+* Spring Boot Project Structure
+* JPA Entities
+* DTOs
+* Controllers
+* Services
+* Repositories
+* Exception Handling
+* JWT Security Skeleton
+* Swagger/OpenAPI Configuration
+* Dockerfile
+
+Upcoming:
+
+* Unit Testing (JUnit & Mockito)
+* CI/CD Pipeline (GitHub Actions)
+* MySQL Integration Testing
+* AWS Deployment
+* Kubernetes Deployment
+
+---
 
 # Banking REST API System
 
-A production-ready banking backend application built using Java, Spring Boot, Spring Security, JWT, Hibernate, JPA, MySQL, Docker, and JUnit.
+A production-ready banking backend application built using Java, Spring Boot, Spring Security, JWT, Hibernate, JPA, MySQL, Docker, and Swagger/OpenAPI.
+
+The project demonstrates modern backend development practices including layered architecture, RESTful API development, authentication, exception handling, containerization, and enterprise-grade project structure.
+
+---
 
 ## Features
 
-- User Registration
-- User Authentication using JWT
-- Role Based Access Control
-- Account Creation
-- Account Management
-- Deposit Transactions
-- Withdrawal Transactions
-- Fund Transfers
-- Transaction History
-- Global Exception Handling
-- API Documentation using Swagger
-- Unit Testing using JUnit and Mockito
-- Docker Containerization
+* User Registration
+* User Authentication using JWT
+* Role-Based Access Control
+* Account Creation
+* Account Management
+* Deposit Transactions
+* Withdrawal Transactions
+* Fund Transfers
+* Transaction History
+* Global Exception Handling
+* Swagger/OpenAPI Documentation
+* JPA Entity Management
+* Repository Pattern
+* RESTful API Design
+* Docker Containerization
+* Scalable Layered Architecture
+
+---
 
 ## Tech Stack
 
 ### Backend
-- Java 17
-- Spring Boot
-- Spring Security
-- Spring Data JPA
-- Hibernate
+
+* Java 17
+* Spring Boot 3
+* Spring Security
+* Spring Data JPA
+* Hibernate
 
 ### Database
-- MySQL
+
+* MySQL
+
+### API Documentation
+
+* Swagger / OpenAPI
 
 ### Testing
-- JUnit
-- Mockito
+
+* JUnit
+* Mockito
 
 ### DevOps
-- Docker
-- GitHub Actions
+
+* Docker
+* GitHub Actions (Planned)
+
+### Build Tool
+
+* Maven
+
+---
 
 ## Project Architecture
 
+```text
 Client
-↓
-REST API
-↓
-Spring Boot Service Layer
-↓
+   │
+   ▼
+REST Controllers
+   │
+   ▼
+Service Layer
+   │
+   ▼
+Repository Layer
+   │
+   ▼
 Hibernate / JPA
-↓
+   │
+   ▼
 MySQL Database
+
+Security Layer
+(JWT Authentication)
+
+Documentation Layer
+(Swagger/OpenAPI)
+
+Deployment Layer
+(Docker)
+```
+
+---
+
+## API Endpoints
+
+### Authentication
+
+```http
+POST /api/auth/register
+POST /api/auth/login
+```
+
+### Accounts
+
+```http
+POST /api/accounts
+GET  /api/accounts
+```
+
+### Transactions
+
+```http
+POST /api/transactions/deposit
+POST /api/transactions/withdraw
+POST /api/transactions/transfer
+```
+
+---
+
+## Project Structure
+
+```text
+src/main/java/com/vinesh/banking
+
+├── config
+├── controller
+├── dto
+├── entity
+├── exception
+├── repository
+├── security
+├── service
+└── BankingApplication.java
+```
+
+---
+
+## Documentation
+
+* Architecture Diagram: docs/architecture/system-architecture.md
+* API Documentation: docs/api-endpoints.md
+
+---
 
 ## Future Enhancements
 
-- Kafka Event Streaming
-- Kubernetes Deployment
-- AWS Deployment
-- CI/CD Pipeline Automation
-- Monitoring using Prometheus and Grafana
+* Kafka Event Streaming
+* Event-Driven Architecture
+* Kubernetes Deployment
+* AWS EKS Deployment
+* CI/CD Pipeline Automation
+* Monitoring using Prometheus and Grafana
+* Redis Caching
+* Email Notifications
+* Audit Logging
+
+---
 
 ## Author
 
-Vinesh Reddy
+**Vinesh Reddy Kankanalapally**
 
 Software Engineer | Java | Spring Boot | AWS | Kubernetes | Terraform
+
+GitHub: https://github.com/VineshReddyK
+
+LinkedIn: https://www.linkedin.com/in/vinesh-reddy-kankanalapally/
