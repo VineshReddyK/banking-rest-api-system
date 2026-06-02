@@ -10,3 +10,10 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 }
+public String registerUser() {
+    return "User Registered";
+}
+
+public String loginUser() {
+    return "Login Successful";
+}
