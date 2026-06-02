@@ -10,3 +10,10 @@ public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
 }
+public String createAccount() {
+    return "Account Created";
+}
+
+public String getAccounts() {
+    return "Accounts Retrieved";
+}
