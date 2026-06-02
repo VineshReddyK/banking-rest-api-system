@@ -1,11 +1,12 @@
-![CI](https://github.com/VineshReddyK/banking-rest-api-system/actions/workflows/ci.yml/badge.svg)
 # Banking REST API System
+
+![CI](https://github.com/VineshReddyK/banking-rest-api-system/actions/workflows/ci.yml/badge.svg)
 
 ## Project Status
 
 🚧 In Progress
 
-Completed:
+### Completed
 
 * Spring Boot Project Structure
 * JPA Entities
@@ -17,22 +18,22 @@ Completed:
 * JWT Security Skeleton
 * Swagger/OpenAPI Configuration
 * Dockerfile
+* GitHub Actions CI Pipeline
 
-Upcoming:
+### Upcoming
 
 * Unit Testing (JUnit & Mockito)
-* CI/CD Pipeline (GitHub Actions)
 * MySQL Integration Testing
 * AWS Deployment
 * Kubernetes Deployment
 
 ---
 
-# Banking REST API System
+## Overview
 
 A production-ready banking backend application built using Java, Spring Boot, Spring Security, JWT, Hibernate, JPA, MySQL, Docker, and Swagger/OpenAPI.
 
-The project demonstrates modern backend development practices including layered architecture, RESTful API development, authentication, exception handling, containerization, and enterprise-grade project structure.
+This project demonstrates modern backend development practices including layered architecture, RESTful API development, authentication, exception handling, containerization, and enterprise-grade project structure.
 
 ---
 
@@ -83,7 +84,7 @@ The project demonstrates modern backend development practices including layered 
 ### DevOps
 
 * Docker
-* GitHub Actions (Planned)
+* GitHub Actions
 
 ### Build Tool
 
@@ -181,6 +182,21 @@ git clone https://github.com/VineshReddyK/banking-rest-api-system.git
 cd banking-rest-api-system
 mvn clean install
 mvn spring-boot:run
+```
+
+Application URL:
+
+```text
+http://localhost:8080
+```
+
+Swagger UI:
+
+```text
+http://localhost:8080/swagger-ui/index.html
+```
+
+---
 
 ## Future Enhancements
 
@@ -188,7 +204,6 @@ mvn spring-boot:run
 * Event-Driven Architecture
 * Kubernetes Deployment
 * AWS EKS Deployment
-* CI/CD Pipeline Automation
 * Monitoring using Prometheus and Grafana
 * Redis Caching
 * Email Notifications
