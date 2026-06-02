@@ -1,5 +1,8 @@
 @Entity
 @Table(name = "accounts")
+
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 public class Account {
 
     @Id
@@ -8,6 +11,16 @@ public class Account {
 
     private String accountNumber;
     private Double balance;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    public User getUser() {
+    return user;
+}
+
+public void setUser(User user) {
+    this.user = user;
+}
     public Account() {
     }
     public Long getId() {
