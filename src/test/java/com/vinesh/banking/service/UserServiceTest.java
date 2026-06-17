@@ -8,6 +8,8 @@ import com.vinesh.banking.exception.DuplicateResourceException;
 import com.vinesh.banking.exception.ResourceNotFoundException;
 import com.vinesh.banking.repository.UserRepository;
 import com.vinesh.banking.security.JwtUtil;
+import com.vinesh.banking.service.AuditLogService;
+import com.vinesh.banking.service.EmailNotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -32,6 +34,12 @@ class UserServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private AuditLogService auditLogService;
+
+    @Mock
+    private EmailNotificationService emailNotificationService;
 
     @InjectMocks
     private UserService userService;

@@ -11,9 +11,13 @@ import com.vinesh.banking.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class UserService {
+
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -23,6 +27,12 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuditLogService auditLogService;
+
+    @Autowired
+    private EmailNotificationService emailNotificationService;
 
     public String registerUser(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -34,6 +44,8 @@ public class UserService {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
+        auditLogService.log("USER_REGISTER", request.getEmail(), "New user registered: " + request.getEmail());
+        emailNotificationService.sendWelcomeEmail(request.getEmail(), request.getUsername());
 
         return "User registered successfully";
     }
@@ -47,6 +59,8 @@ public class UserService {
         }
 
         String token = jwtUtil.generateToken(user.getEmail());
+        auditLogService.log("USER_LOGIN", user.getEmail(), "User logged in: " + user.getEmail());
+
         LoginResponse response = new LoginResponse();
         response.setToken(token);
         return response;

@@ -25,7 +25,10 @@ A production-ready Banking REST API built with Java, Spring Boot, Spring Securit
 - **Spring Actuator** health endpoint for K8s readiness and liveness probes
 - **Redis caching** — account reads cached with 10-minute TTL, auto-evicted on any write
 - **Kafka event streaming** — transaction events published to `transaction-events` topic on every deposit, withdrawal, and transfer
-- **Docker Compose** — full local stack: MySQL + Redis + Kafka + API in one command
+- **Audit logging** — every register, login, deposit, withdrawal, and transfer written to `audit_logs` table
+- **Email notifications** — welcome email on register; deposit, withdrawal, and transfer alerts via Gmail SMTP
+- **Prometheus + Grafana** — metrics exposed at `/actuator/prometheus`, Grafana auto-provisioned at port 3000
+- **Docker Compose** — full local stack: MySQL + Redis + Kafka + Prometheus + Grafana + API in one command
 - **GitHub Actions** CI pipeline with Maven dependency caching and test artifact upload
 - Unit tests with **JUnit 5 + Mockito**
 
@@ -49,6 +52,8 @@ A production-ready Banking REST API built with Java, Spring Boot, Spring Securit
 | Health Monitoring | Spring Actuator |
 | Caching | Redis 7 |
 | Event Streaming | Apache Kafka |
+| Email | Spring Mail + Gmail SMTP |
+| Monitoring | Prometheus + Grafana |
 | CI/CD | GitHub Actions |
 
 ---
@@ -133,11 +138,19 @@ mvn spring-boot:run
 
 ### Run with Docker Compose (full stack)
 
-Starts MySQL + Redis + Kafka + the API together:
+Starts MySQL + Redis + Kafka + Prometheus + Grafana + the API together:
 
 ```bash
 docker-compose up --build
 ```
+
+| URL | Description |
+|-----|-------------|
+| `http://localhost:8080/swagger-ui/index.html` | Swagger UI |
+| `http://localhost:8080/actuator/health` | Health check |
+| `http://localhost:8080/actuator/prometheus` | Prometheus metrics |
+| `http://localhost:9090` | Prometheus UI |
+| `http://localhost:3000` | Grafana (admin / admin) |
 
 ### Run with Docker (API only)
 
@@ -221,9 +234,9 @@ See [docs/architecture/system-architecture.md](docs/architecture/system-architec
 | Kubernetes deployment (AWS EKS) | ✅ Done |
 | Redis caching for account balance reads | ✅ Done |
 | Kafka event streaming for transaction notifications | ✅ Done |
-| Audit logging | Planned |
-| Email notifications on transactions | Planned |
-| Monitoring with Prometheus and Grafana | Planned |
+| Audit logging | ✅ Done |
+| Email notifications on transactions | ✅ Done |
+| Monitoring with Prometheus and Grafana | ✅ Done |
 
 ---
 

@@ -28,6 +28,12 @@ public class TransactionService {
     @Autowired
     private TransactionProducer transactionProducer;
 
+    @Autowired
+    private AuditLogService auditLogService;
+
+    @Autowired
+    private EmailNotificationService emailNotificationService;
+
     @Transactional
     @CacheEvict(value = "accounts", allEntries = true)
     public String deposit(TransactionRequest request) {
@@ -44,6 +50,8 @@ public class TransactionService {
         transaction.setTransactionDate(LocalDateTime.now());
         transactionRepository.save(transaction);
         transactionProducer.publish(new TransactionEvent("DEPOSIT", account.getId(), request.getAmount(), account.getBalance()));
+        auditLogService.log("DEPOSIT", "account:" + account.getId(), "Deposited $" + request.getAmount() + ", new balance: $" + account.getBalance());
+        emailNotificationService.sendDepositAlert(account.getUser().getEmail(), account.getId(), request.getAmount(), account.getBalance());
 
         return "Deposit Successful. New balance: " + account.getBalance();
     }
@@ -68,6 +76,8 @@ public class TransactionService {
         transaction.setTransactionDate(LocalDateTime.now());
         transactionRepository.save(transaction);
         transactionProducer.publish(new TransactionEvent("WITHDRAWAL", account.getId(), request.getAmount(), account.getBalance()));
+        auditLogService.log("WITHDRAWAL", "account:" + account.getId(), "Withdrew $" + request.getAmount() + ", new balance: $" + account.getBalance());
+        emailNotificationService.sendWithdrawalAlert(account.getUser().getEmail(), account.getId(), request.getAmount(), account.getBalance());
 
         return "Withdrawal Successful. New balance: " + account.getBalance();
     }
@@ -103,6 +113,8 @@ public class TransactionService {
         credit.setTransactionDate(LocalDateTime.now());
         transactionRepository.save(credit);
         transactionProducer.publish(new TransactionEvent("TRANSFER", source.getId(), request.getAmount(), source.getBalance()));
+        auditLogService.log("TRANSFER", "account:" + source.getId(), "Transferred $" + request.getAmount() + " to account:" + target.getId() + ", new balance: $" + source.getBalance());
+        emailNotificationService.sendTransferAlert(source.getUser().getEmail(), source.getId(), target.getId(), request.getAmount(), source.getBalance());
 
         return "Transfer Successful. New balance: " + source.getBalance();
     }

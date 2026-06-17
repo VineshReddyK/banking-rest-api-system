@@ -3,8 +3,11 @@ package com.vinesh.banking.service;
 import com.vinesh.banking.dto.TransactionRequest;
 import com.vinesh.banking.entity.Account;
 import com.vinesh.banking.entity.Transaction;
+import com.vinesh.banking.entity.User;
 import com.vinesh.banking.exception.ResourceNotFoundException;
 import com.vinesh.banking.kafka.TransactionProducer;
+import com.vinesh.banking.service.AuditLogService;
+import com.vinesh.banking.service.EmailNotificationService;
 import com.vinesh.banking.repository.AccountRepository;
 import com.vinesh.banking.repository.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +33,12 @@ class TransactionServiceTest {
     @Mock
     private TransactionProducer transactionProducer;
 
+    @Mock
+    private AuditLogService auditLogService;
+
+    @Mock
+    private EmailNotificationService emailNotificationService;
+
     @InjectMocks
     private TransactionService transactionService;
 
@@ -38,11 +47,18 @@ class TransactionServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    private User testUser() {
+        User u = new User();
+        u.setEmail("test@example.com");
+        return u;
+    }
+
     @Test
     void deposit_shouldIncreaseBalance() {
         Account account = new Account();
         account.setId(1L);
         account.setBalance(500.0);
+        account.setUser(testUser());
 
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
         when(accountRepository.save(any())).thenReturn(account);
@@ -63,6 +79,7 @@ class TransactionServiceTest {
         Account account = new Account();
         account.setId(1L);
         account.setBalance(100.0);
+        account.setUser(testUser());
 
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
 
@@ -78,10 +95,12 @@ class TransactionServiceTest {
         Account source = new Account();
         source.setId(1L);
         source.setBalance(1000.0);
+        source.setUser(testUser());
 
         Account target = new Account();
         target.setId(2L);
         target.setBalance(200.0);
+        target.setUser(testUser());
 
         when(accountRepository.findById(1L)).thenReturn(Optional.of(source));
         when(accountRepository.findById(2L)).thenReturn(Optional.of(target));
