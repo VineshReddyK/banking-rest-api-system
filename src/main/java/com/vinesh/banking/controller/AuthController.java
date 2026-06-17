@@ -17,13 +17,13 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<String> register(@jakarta.validation.Valid @RequestBody RegisterRequest request) {
         String message = userService.registerUser(request);
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@jakarta.validation.Valid @RequestBody LoginRequest request) {
         LoginResponse response = userService.loginUser(request);
         return ResponseEntity.ok(response);
     }

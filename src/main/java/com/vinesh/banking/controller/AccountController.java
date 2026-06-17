@@ -19,7 +19,7 @@ public class AccountController {
 
     @PostMapping("/{userId}")
     public ResponseEntity<AccountResponse> createAccount(@PathVariable Long userId,
-                                                          @RequestBody AccountRequest request) {
+                                                          @jakarta.validation.Valid @RequestBody AccountRequest request) {
         AccountResponse response = accountService.createAccount(userId, request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

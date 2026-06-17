@@ -13,11 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 class UserServiceTest {
@@ -27,6 +29,9 @@ class UserServiceTest {
 
     @Mock
     private JwtUtil jwtUtil;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UserService userService;
@@ -39,6 +44,7 @@ class UserServiceTest {
     @Test
     void registerUser_shouldReturnSuccessMessage() {
         when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
+        when(passwordEncoder.encode(anyString())).thenReturn("$2a$10$encodedpassword");
         when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
 
         RegisterRequest request = new RegisterRequest();
@@ -65,9 +71,10 @@ class UserServiceTest {
     void loginUser_validCredentials_shouldReturnToken() {
         User user = new User();
         user.setEmail("test@example.com");
-        user.setPassword("pass123");
+        user.setPassword("$2a$10$encodedpassword");
 
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("pass123", "$2a$10$encodedpassword")).thenReturn(true);
         when(jwtUtil.generateToken("test@example.com")).thenReturn("mock-jwt-token");
 
         LoginRequest request = new LoginRequest();
@@ -77,6 +84,22 @@ class UserServiceTest {
         LoginResponse response = userService.loginUser(request);
 
         assertEquals("mock-jwt-token", response.getToken());
+    }
+
+    @Test
+    void loginUser_invalidPassword_shouldThrow() {
+        User user = new User();
+        user.setEmail("test@example.com");
+        user.setPassword("$2a$10$encodedpassword");
+
+        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("wrongpass", "$2a$10$encodedpassword")).thenReturn(false);
+
+        LoginRequest request = new LoginRequest();
+        request.setEmail("test@example.com");
+        request.setPassword("wrongpass");
+
+        assertThrows(IllegalArgumentException.class, () -> userService.loginUser(request));
     }
 
     @Test

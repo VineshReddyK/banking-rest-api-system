@@ -44,6 +44,7 @@ class AccountServiceTest {
 
         Account saved = new Account();
         saved.setAccountNumber("ABC123");
+        saved.setAccountType("SAVINGS");
         saved.setBalance(500.0);
         saved.setUser(user);
 

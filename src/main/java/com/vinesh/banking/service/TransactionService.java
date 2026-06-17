@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class TransactionService {
@@ -92,5 +93,9 @@ public class TransactionService {
         transactionRepository.save(credit);
 
         return "Transfer Successful. New balance: " + source.getBalance();
+    }
+
+    public List<Transaction> getTransactionHistory(Long accountId) {
+        return transactionRepository.findByAccountId(accountId);
     }
 }

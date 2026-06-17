@@ -29,6 +29,7 @@ public class AccountService {
 
         Account account = new Account();
         account.setAccountNumber(UUID.randomUUID().toString().replace("-", "").substring(0, 12).toUpperCase());
+        account.setAccountType(request.getAccountType() != null ? request.getAccountType() : "SAVINGS");
         account.setBalance(request.getInitialDeposit() != null ? request.getInitialDeposit() : 0.0);
         account.setUser(user);
 
@@ -36,6 +37,7 @@ public class AccountService {
 
         AccountResponse response = new AccountResponse();
         response.setAccountNumber(saved.getAccountNumber());
+        response.setAccountType(saved.getAccountType());
         response.setBalance(saved.getBalance());
         return response;
     }
@@ -45,6 +47,8 @@ public class AccountService {
             AccountResponse response = new AccountResponse();
             response.setAccountNumber(account.getAccountNumber());
             response.setBalance(account.getBalance());
+            return response;
+            response.setAccountType(account.getAccountType());
             return response;
         }).collect(Collectors.toList());
     }
