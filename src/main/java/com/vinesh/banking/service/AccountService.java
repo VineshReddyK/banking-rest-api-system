@@ -8,6 +8,8 @@ import com.vinesh.banking.exception.ResourceNotFoundException;
 import com.vinesh.banking.repository.AccountRepository;
 import com.vinesh.banking.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +25,7 @@ public class AccountService {
     @Autowired
     private UserRepository userRepository;
 
+    @CacheEvict(value = "accounts", allEntries = true)
     public AccountResponse createAccount(Long userId, AccountRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
@@ -42,6 +45,7 @@ public class AccountService {
         return response;
     }
 
+    @Cacheable(value = "accounts")
     public List<AccountResponse> getAccounts() {
         return accountRepository.findAll().stream().map(account -> {
             AccountResponse response = new AccountResponse();

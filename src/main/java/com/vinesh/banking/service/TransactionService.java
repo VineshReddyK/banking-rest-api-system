@@ -4,9 +4,12 @@ import com.vinesh.banking.dto.TransactionRequest;
 import com.vinesh.banking.entity.Account;
 import com.vinesh.banking.entity.Transaction;
 import com.vinesh.banking.exception.ResourceNotFoundException;
+import com.vinesh.banking.kafka.TransactionEvent;
+import com.vinesh.banking.kafka.TransactionProducer;
 import com.vinesh.banking.repository.AccountRepository;
 import com.vinesh.banking.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +25,11 @@ public class TransactionService {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private TransactionProducer transactionProducer;
+
     @Transactional
+    @CacheEvict(value = "accounts", allEntries = true)
     public String deposit(TransactionRequest request) {
         Account account = accountRepository.findById(request.getAccountId())
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + request.getAccountId()));
@@ -36,11 +43,13 @@ public class TransactionService {
         transaction.setTransactionType("DEPOSIT");
         transaction.setTransactionDate(LocalDateTime.now());
         transactionRepository.save(transaction);
+        transactionProducer.publish(new TransactionEvent("DEPOSIT", account.getId(), request.getAmount(), account.getBalance()));
 
         return "Deposit Successful. New balance: " + account.getBalance();
     }
 
     @Transactional
+    @CacheEvict(value = "accounts", allEntries = true)
     public String withdraw(TransactionRequest request) {
         Account account = accountRepository.findById(request.getAccountId())
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + request.getAccountId()));
@@ -58,11 +67,13 @@ public class TransactionService {
         transaction.setTransactionType("WITHDRAWAL");
         transaction.setTransactionDate(LocalDateTime.now());
         transactionRepository.save(transaction);
+        transactionProducer.publish(new TransactionEvent("WITHDRAWAL", account.getId(), request.getAmount(), account.getBalance()));
 
         return "Withdrawal Successful. New balance: " + account.getBalance();
     }
 
     @Transactional
+    @CacheEvict(value = "accounts", allEntries = true)
     public String transfer(TransactionRequest request) {
         Account source = accountRepository.findById(request.getAccountId())
                 .orElseThrow(() -> new ResourceNotFoundException("Source account not found with id: " + request.getAccountId()));
@@ -91,6 +102,7 @@ public class TransactionService {
         credit.setTransactionType("TRANSFER_CREDIT");
         credit.setTransactionDate(LocalDateTime.now());
         transactionRepository.save(credit);
+        transactionProducer.publish(new TransactionEvent("TRANSFER", source.getId(), request.getAmount(), source.getBalance()));
 
         return "Transfer Successful. New balance: " + source.getBalance();
     }

@@ -4,6 +4,7 @@ import com.vinesh.banking.dto.TransactionRequest;
 import com.vinesh.banking.entity.Account;
 import com.vinesh.banking.entity.Transaction;
 import com.vinesh.banking.exception.ResourceNotFoundException;
+import com.vinesh.banking.kafka.TransactionProducer;
 import com.vinesh.banking.repository.AccountRepository;
 import com.vinesh.banking.repository.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,9 @@ class TransactionServiceTest {
 
     @Mock
     private AccountRepository accountRepository;
+
+    @Mock
+    private TransactionProducer transactionProducer;
 
     @InjectMocks
     private TransactionService transactionService;

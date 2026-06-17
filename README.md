@@ -23,6 +23,9 @@ A production-ready Banking REST API built with Java, Spring Boot, Spring Securit
 - **Docker** multi-stage build (Maven build → lean JRE image)
 - **Kubernetes** manifests for AWS EKS — Deployment, Service, ConfigMap, Secret, HPA (auto-scales 2→10 pods)
 - **Spring Actuator** health endpoint for K8s readiness and liveness probes
+- **Redis caching** — account reads cached with 10-minute TTL, auto-evicted on any write
+- **Kafka event streaming** — transaction events published to `transaction-events` topic on every deposit, withdrawal, and transfer
+- **Docker Compose** — full local stack: MySQL + Redis + Kafka + API in one command
 - **GitHub Actions** CI pipeline with Maven dependency caching and test artifact upload
 - Unit tests with **JUnit 5 + Mockito**
 
@@ -44,6 +47,8 @@ A production-ready Banking REST API built with Java, Spring Boot, Spring Securit
 | Containerization | Docker (multi-stage) |
 | Orchestration | Kubernetes (AWS EKS) |
 | Health Monitoring | Spring Actuator |
+| Caching | Redis 7 |
+| Event Streaming | Apache Kafka |
 | CI/CD | GitHub Actions |
 
 ---
@@ -126,7 +131,15 @@ mvn spring-boot:run
 | `http://localhost:8080` | API base URL |
 | `http://localhost:8080/swagger-ui/index.html` | Swagger UI |
 
-### Run with Docker
+### Run with Docker Compose (full stack)
+
+Starts MySQL + Redis + Kafka + the API together:
+
+```bash
+docker-compose up --build
+```
+
+### Run with Docker (API only)
 
 ```bash
 docker build -t banking-api .
@@ -206,11 +219,11 @@ See [docs/architecture/system-architecture.md](docs/architecture/system-architec
 | Feature | Status |
 |---------|--------|
 | Kubernetes deployment (AWS EKS) | ✅ Done |
+| Redis caching for account balance reads | ✅ Done |
+| Kafka event streaming for transaction notifications | ✅ Done |
 | Audit logging | Planned |
 | Email notifications on transactions | Planned |
 | Monitoring with Prometheus and Grafana | Planned |
-| Redis caching for account balance reads | Planned |
-| Kafka event streaming for transaction notifications | Planned |
 
 ---
 
