@@ -47,7 +47,6 @@ public class AccountService {
             AccountResponse response = new AccountResponse();
             response.setAccountNumber(account.getAccountNumber());
             response.setBalance(account.getBalance());
-            return response;
             response.setAccountType(account.getAccountType());
             return response;
         }).collect(Collectors.toList());
