@@ -133,6 +133,47 @@ docker run -p 8080:8080 \
   banking-api
 ```
 
+### Deploy to Kubernetes (AWS EKS)
+
+#### Prerequisites
+- `kubectl` configured against your EKS cluster
+- Docker image pushed to ECR or Docker Hub
+
+#### Build and push the image
+
+```bash
+docker build -t vineshreddy/banking-rest-api-system:latest .
+docker push vineshreddy/banking-rest-api-system:latest
+```
+
+#### Apply manifests
+
+```bash
+kubectl apply -f k8s/namespace.yaml
+kubectl apply -f k8s/secret.yaml
+kubectl apply -f k8s/configmap.yaml
+kubectl apply -f k8s/mysql-deployment.yaml
+kubectl apply -f k8s/banking-deployment.yaml
+kubectl apply -f k8s/banking-service.yaml
+kubectl apply -f k8s/hpa.yaml
+```
+
+#### Verify
+
+```bash
+kubectl get pods -n banking
+kubectl get svc -n banking      # copy the EXTERNAL-IP for the LoadBalancer
+kubectl get hpa -n banking
+```
+
+The API will be available at `http://<EXTERNAL-IP>/swagger-ui/index.html`.
+
+#### Teardown
+
+```bash
+kubectl delete namespace banking
+```
+
 ### Run Tests
 
 ```bash
@@ -156,14 +197,16 @@ See [docs/architecture/system-architecture.md](docs/architecture/system-architec
 
 ---
 
-## Future Enhancements
+## Roadmap
 
-- Kafka event streaming for transaction notifications
-- Redis caching for account balance reads
-- Kubernetes deployment (AWS EKS)
-- Monitoring with Prometheus and Grafana
-- Email notifications on transactions
-- Audit logging
+| Feature | Status |
+|---------|--------|
+| Kubernetes deployment (AWS EKS) | ✅ Done |
+| Audit logging | Planned |
+| Email notifications on transactions | Planned |
+| Monitoring with Prometheus and Grafana | Planned |
+| Redis caching for account balance reads | Planned |
+| Kafka event streaming for transaction notifications | Planned |
 
 ---
 

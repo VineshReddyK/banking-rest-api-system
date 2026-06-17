@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: banking-config
+  namespace: banking
+data:
+  SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-service:3306/bankingdb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true"
+  SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
+  SPRING_JPA_SHOW_SQL: "false"
+  JWT_EXPIRATION: "86400000"
+  SERVER_PORT: "8080"

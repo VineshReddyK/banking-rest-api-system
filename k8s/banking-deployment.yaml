@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: banking-api
+  namespace: banking
+  labels:
+    app: banking-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: banking-api
+  template:
+    metadata:
+      labels:
+        app: banking-api
+    spec:
+      containers:
+        - name: banking-api
+          image: vineshreddy/banking-rest-api-system:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: banking-config
+          env:
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: banking-secret
+                  key: db-username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: banking-secret
+                  key: db-password
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: banking-secret
+                  key: jwt-secret
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            failureThreshold: 3
