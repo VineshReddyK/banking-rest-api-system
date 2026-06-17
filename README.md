@@ -4,7 +4,7 @@
 
 ## Project Status
 
-🚧 In Progress
+✅ Complete
 
 ### Completed
 
@@ -15,14 +15,14 @@
 * Services
 * Repositories
 * Exception Handling
-* JWT Security Skeleton
+* JWT Security (with filter chain integration)
 * Swagger/OpenAPI Configuration
 * Dockerfile
 * GitHub Actions CI Pipeline
+* Unit Tests (JUnit & Mockito)
 
 ### Upcoming
 
-* Unit Testing (JUnit & Mockito)
 * MySQL Integration Testing
 * AWS Deployment
 * Kubernetes Deployment

@@ -1,62 +1,43 @@
+package com.vinesh.banking.entity;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "transactions")
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Column;
 public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-@Column(nullable = false)
-private Double amount;
 
-@Column(nullable = false)
-private String transactionType;
+    @Column(nullable = false)
+    private Double amount;
 
-@Column(nullable = false)
-private LocalDateTime transactionDate;
+    @Column(nullable = false)
+    private String transactionType;
+
+    @Column(nullable = false)
+    private LocalDateTime transactionDate;
+
     @ManyToOne
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "account_id", nullable = false)
     private Account account;
-    public Account getAccount() {
-    return account;
-}
 
-public void setAccount(Account account) {
-    this.account = account;
-}
-    public Transaction() {
-}
-    public Long getId() {
-    return id;
-}
+    public Transaction() {}
 
-public void setId(Long id) {
-    this.id = id;
-}
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-public Double getAmount() {
-    return amount;
-}
+    public Double getAmount() { return amount; }
+    public void setAmount(Double amount) { this.amount = amount; }
 
-public void setAmount(Double amount) {
-    this.amount = amount;
-}
+    public String getTransactionType() { return transactionType; }
+    public void setTransactionType(String transactionType) { this.transactionType = transactionType; }
 
-public String getTransactionType() {
-    return transactionType;
-}
+    public LocalDateTime getTransactionDate() { return transactionDate; }
+    public void setTransactionDate(LocalDateTime transactionDate) { this.transactionDate = transactionDate; }
 
-public void setTransactionType(String transactionType) {
-    this.transactionType = transactionType;
-}
-
-public LocalDateTime getTransactionDate() {
-    return transactionDate;
-}
-
-public void setTransactionDate(LocalDateTime transactionDate) {
-    this.transactionDate = transactionDate;
-}
+    public Account getAccount() { return account; }
+    public void setAccount(Account account) { this.account = account; }
 }

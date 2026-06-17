@@ -1,0 +1,92 @@
+package com.vinesh.banking.service;
+
+import com.vinesh.banking.dto.LoginRequest;
+import com.vinesh.banking.dto.LoginResponse;
+import com.vinesh.banking.dto.RegisterRequest;
+import com.vinesh.banking.entity.User;
+import com.vinesh.banking.exception.DuplicateResourceException;
+import com.vinesh.banking.exception.ResourceNotFoundException;
+import com.vinesh.banking.repository.UserRepository;
+import com.vinesh.banking.security.JwtUtil;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+class UserServiceTest {
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private JwtUtil jwtUtil;
+
+    @InjectMocks
+    private UserService userService;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void registerUser_shouldReturnSuccessMessage() {
+        when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
+        when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
+
+        RegisterRequest request = new RegisterRequest();
+        request.setUsername("vinesh");
+        request.setEmail("test@example.com");
+        request.setPassword("pass123");
+
+        String result = userService.registerUser(request);
+
+        assertEquals("User registered successfully", result);
+    }
+
+    @Test
+    void registerUser_duplicateEmail_shouldThrow() {
+        when(userRepository.existsByEmail("test@example.com")).thenReturn(true);
+
+        RegisterRequest request = new RegisterRequest();
+        request.setEmail("test@example.com");
+
+        assertThrows(DuplicateResourceException.class, () -> userService.registerUser(request));
+    }
+
+    @Test
+    void loginUser_validCredentials_shouldReturnToken() {
+        User user = new User();
+        user.setEmail("test@example.com");
+        user.setPassword("pass123");
+
+        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+        when(jwtUtil.generateToken("test@example.com")).thenReturn("mock-jwt-token");
+
+        LoginRequest request = new LoginRequest();
+        request.setEmail("test@example.com");
+        request.setPassword("pass123");
+
+        LoginResponse response = userService.loginUser(request);
+
+        assertEquals("mock-jwt-token", response.getToken());
+    }
+
+    @Test
+    void loginUser_userNotFound_shouldThrow() {
+        when(userRepository.findByEmail("unknown@example.com")).thenReturn(Optional.empty());
+
+        LoginRequest request = new LoginRequest();
+        request.setEmail("unknown@example.com");
+        request.setPassword("pass");
+
+        assertThrows(ResourceNotFoundException.class, () -> userService.loginUser(request));
+    }
+}
