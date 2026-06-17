@@ -21,6 +21,8 @@ A production-ready Banking REST API built with Java, Spring Boot, Spring Securit
 - **Structured JSON error responses** with timestamp, status, and message
 - **Swagger / OpenAPI** documentation with JWT bearer auth support
 - **Docker** multi-stage build (Maven build → lean JRE image)
+- **Kubernetes** manifests for AWS EKS — Deployment, Service, ConfigMap, Secret, HPA (auto-scales 2→10 pods)
+- **Spring Actuator** health endpoint for K8s readiness and liveness probes
 - **GitHub Actions** CI pipeline with Maven dependency caching and test artifact upload
 - Unit tests with **JUnit 5 + Mockito**
 
@@ -40,6 +42,8 @@ A production-ready Banking REST API built with Java, Spring Boot, Spring Securit
 | Testing | JUnit 5 + Mockito |
 | Build | Maven |
 | Containerization | Docker (multi-stage) |
+| Orchestration | Kubernetes (AWS EKS) |
+| Health Monitoring | Spring Actuator |
 | CI/CD | GitHub Actions |
 
 ---
