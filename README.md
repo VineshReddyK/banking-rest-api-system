@@ -1,125 +1,62 @@
 # Banking REST API System
 
 ![CI](https://github.com/VineshReddyK/banking-rest-api-system/actions/workflows/ci.yml/badge.svg)
+![Java](https://img.shields.io/badge/Java-17-orange)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3-green)
+![License](https://img.shields.io/badge/license-MIT-blue)
 
-## Project Status
-
-✅ Complete
-
-### Completed
-
-* Spring Boot Project Structure
-* JPA Entities
-* DTOs
-* Controllers
-* Services
-* Repositories
-* Exception Handling
-* JWT Security (with filter chain integration)
-* Swagger/OpenAPI Configuration
-* Dockerfile
-* GitHub Actions CI Pipeline
-* Unit Tests (JUnit & Mockito)
-
-### Upcoming
-
-* MySQL Integration Testing
-* AWS Deployment
-* Kubernetes Deployment
-
----
-
-## Overview
-
-A production-ready banking backend application built using Java, Spring Boot, Spring Security, JWT, Hibernate, JPA, MySQL, Docker, and Swagger/OpenAPI.
-
-This project demonstrates modern backend development practices including layered architecture, RESTful API development, authentication, exception handling, containerization, and enterprise-grade project structure.
+A production-ready Banking REST API built with Java, Spring Boot, Spring Security, JWT (JJWT), BCrypt, Hibernate, JPA, MySQL, Docker, and JUnit.
 
 ---
 
 ## Features
 
-* User Registration
-* User Authentication using JWT
-* Role-Based Access Control
-* Account Creation
-* Account Management
-* Deposit Transactions
-* Withdrawal Transactions
-* Fund Transfers
-* Transaction History
-* Global Exception Handling
-* Swagger/OpenAPI Documentation
-* JPA Entity Management
-* Repository Pattern
-* RESTful API Design
-* Docker Containerization
-* Scalable Layered Architecture
+- User registration and login with **BCrypt password hashing**
+- **JWT authentication** (JJWT 0.12.6) — signed tokens, expiry validation
+- **Spring Security** filter chain with stateless session management
+- Account creation with account type (SAVINGS / CHECKING)
+- Deposit, withdrawal, and fund transfer with balance validation
+- Transaction history per account
+- **Input validation** on all request bodies (`@Valid`, `@NotBlank`, `@Email`, `@Positive`)
+- **Structured JSON error responses** with timestamp, status, and message
+- **Swagger / OpenAPI** documentation with JWT bearer auth support
+- **Docker** multi-stage build (Maven build → lean JRE image)
+- **GitHub Actions** CI pipeline with Maven dependency caching and test artifact upload
+- Unit tests with **JUnit 5 + Mockito**
 
 ---
 
 ## Tech Stack
 
-### Backend
-
-* Java 17
-* Spring Boot 3
-* Spring Security
-* Spring Data JPA
-* Hibernate
-
-### Database
-
-* MySQL
-
-### API Documentation
-
-* Swagger / OpenAPI
-
-### Testing
-
-* JUnit
-* Mockito
-
-### DevOps
-
-* Docker
-* GitHub Actions
-
-### Build Tool
-
-* Maven
+| Layer | Technology |
+|-------|-----------|
+| Language | Java 17 |
+| Framework | Spring Boot 3.3 |
+| Security | Spring Security + JJWT 0.12.6 |
+| Password Hashing | BCrypt |
+| ORM | Spring Data JPA + Hibernate |
+| Database | MySQL 8 |
+| API Docs | SpringDoc OpenAPI 2.5 / Swagger UI |
+| Testing | JUnit 5 + Mockito |
+| Build | Maven |
+| Containerization | Docker (multi-stage) |
+| CI/CD | GitHub Actions |
 
 ---
 
-## Project Architecture
+## Project Structure
 
-```text
-Client
-   │
-   ▼
-REST Controllers
-   │
-   ▼
-Service Layer
-   │
-   ▼
-Repository Layer
-   │
-   ▼
-Hibernate / JPA
-   │
-   ▼
-MySQL Database
-
-Security Layer
-(JWT Authentication)
-
-Documentation Layer
-(Swagger/OpenAPI)
-
-Deployment Layer
-(Docker)
+```
+src/main/java/com/vinesh/banking
+├── BankingApplication.java
+├── config/          SwaggerConfig.java
+├── controller/      AuthController, AccountController, TransactionController
+├── dto/             Request and Response DTOs with validation annotations
+├── entity/          User, Account, Transaction
+├── exception/       GlobalExceptionHandler, custom exceptions
+├── repository/      Spring Data JPA repositories
+├── security/        JwtUtil, JwtFilter, SecurityConfig
+└── service/         UserService, AccountService, TransactionService
 ```
 
 ---
@@ -128,86 +65,105 @@ Deployment Layer
 
 ### Authentication
 
-```http
-POST /api/auth/register
-POST /api/auth/login
-```
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| POST | `/api/auth/register` | No | Register a new user |
+| POST | `/api/auth/login` | No | Login and receive JWT token |
 
 ### Accounts
 
-```http
-POST /api/accounts
-GET  /api/accounts
-```
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| POST | `/api/accounts/{userId}` | Yes | Create a new account |
+| GET | `/api/accounts` | Yes | Get all accounts |
 
 ### Transactions
 
-```http
-POST /api/transactions/deposit
-POST /api/transactions/withdraw
-POST /api/transactions/transfer
-```
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| POST | `/api/transactions/deposit` | Yes | Deposit funds |
+| POST | `/api/transactions/withdraw` | Yes | Withdraw funds |
+| POST | `/api/transactions/transfer` | Yes | Transfer between accounts |
+| GET | `/api/transactions/{accountId}` | Yes | Get transaction history |
+
+> Full request/response examples: [docs/api-endpoints.md](docs/api-endpoints.md)
 
 ---
 
-## Project Structure
+## Getting Started
 
-```text
-src/main/java/com/vinesh/banking
+### Prerequisites
 
-├── config
-├── controller
-├── dto
-├── entity
-├── exception
-├── repository
-├── security
-├── service
-└── BankingApplication.java
-```
+- Java 17+
+- Maven 3.9+
+- MySQL 8+
 
----
-
-## Documentation
-
-* Architecture Diagram: docs/architecture/system-architecture.md
-* API Documentation: docs/api-endpoints.md
-
----
-
-## How to Run Locally
+### Local Setup
 
 ```bash
 git clone https://github.com/VineshReddyK/banking-rest-api-system.git
 cd banking-rest-api-system
-mvn clean install
+```
+
+Create the database:
+
+```sql
+CREATE DATABASE bankingdb;
+```
+
+Update `src/main/resources/application.properties` with your MySQL credentials, then run:
+
+```bash
 mvn spring-boot:run
 ```
 
-Application URL:
+| URL | Description |
+|-----|-------------|
+| `http://localhost:8080` | API base URL |
+| `http://localhost:8080/swagger-ui/index.html` | Swagger UI |
 
-```text
-http://localhost:8080
+### Run with Docker
+
+```bash
+docker build -t banking-api .
+docker run -p 8080:8080 \
+  -e SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3306/bankingdb \
+  -e SPRING_DATASOURCE_USERNAME=root \
+  -e SPRING_DATASOURCE_PASSWORD=password \
+  banking-api
 ```
 
-Swagger UI:
+### Run Tests
 
-```text
-http://localhost:8080/swagger-ui/index.html
+```bash
+mvn clean test
 ```
+
+---
+
+## Security
+
+- Passwords are hashed with **BCrypt** — never stored in plain text
+- JWT tokens are signed with **HMAC-SHA** using a configurable secret key
+- All endpoints except `/api/auth/**` require a valid `Authorization: Bearer <token>` header
+- Tokens expire after 24 hours (configurable via `jwt.expiration`)
+
+---
+
+## Architecture
+
+See [docs/architecture/system-architecture.md](docs/architecture/system-architecture.md) for the full architecture diagram and security flow.
 
 ---
 
 ## Future Enhancements
 
-* Kafka Event Streaming
-* Event-Driven Architecture
-* Kubernetes Deployment
-* AWS EKS Deployment
-* Monitoring using Prometheus and Grafana
-* Redis Caching
-* Email Notifications
-* Audit Logging
+- Kafka event streaming for transaction notifications
+- Redis caching for account balance reads
+- Kubernetes deployment (AWS EKS)
+- Monitoring with Prometheus and Grafana
+- Email notifications on transactions
+- Audit logging
 
 ---
 
@@ -217,6 +173,5 @@ http://localhost:8080/swagger-ui/index.html
 
 Software Engineer | Java | Spring Boot | AWS | Kubernetes | Terraform
 
-GitHub: https://github.com/VineshReddyK
-
-LinkedIn: https://www.linkedin.com/in/vinesh-reddy-kankanalapally/
+- GitHub: [VineshReddyK](https://github.com/VineshReddyK)
+- LinkedIn: [vinesh-reddy-kankanalapally](https://www.linkedin.com/in/vinesh-reddy-kankanalapally/)

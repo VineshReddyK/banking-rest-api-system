@@ -1,20 +1,35 @@
+# Maven
 target/
-.idea/
-.vscode/
-*.iml
-
-logs/
-*.log
-
-.env
-
-.DS_Store
-
 *.class
 *.jar
 *.war
+*.ear
 
-mvnw.cmd
-mvnw
+# IDE
+.idea/
+.vscode/
+*.iml
+*.eclipse
+.project
+.classpath
+.settings/
+*.factorypath
 
+# Logs
+logs/
+*.log
+
+# Environment & secrets
+.env
 application-prod.properties
+application-local.properties
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Maven wrapper (not used in this project)
+mvnw
+mvnw.cmd
+.mvn/
+
