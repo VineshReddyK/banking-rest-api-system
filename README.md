@@ -242,18 +242,18 @@ See [docs/architecture/system-architecture.md](docs/architecture/system-architec
 
 ## Future Enhancements
 
-| Enhancement | Description | Est. Time |
-|---|---|---|
-| **Upgrade Java 17 → 21** | Bump `java.version` in pom.xml to 21 — unlocks virtual threads, records, and pattern matching for improved throughput | 2 hrs |
-| **Upgrade Spring Boot 3.3 → 3.5** | Update `spring-boot-starter-parent` version and fix any breaking changes; run full test suite after | 1 hr |
-| **JaCoCo code coverage + Codecov badge** | Add JaCoCo plugin to pom.xml, generate XML report in CI, upload to Codecov, add badge to README header | 1 hr |
-| **Extend CI pipeline** | Add Docker image build step and coverage upload to existing `ci.yml` — currently only runs `mvn clean test` | 30 min |
-| **Dependabot config** | Add `.github/dependabot.yml` for weekly Maven + Docker dependency PRs so versions never fall behind | 10 min |
-| **GitHub repository topics** | Set topics in repo Settings: `spring-boot`, `java`, `microservices`, `jwt`, `kafka`, `redis`, `kubernetes`, `docker`, `mysql` | 5 min |
-| **Performance benchmarks** | Run JMeter/k6 load test and add a table: p50/p95/p99 API latency, requests/sec, Kafka consumer lag | 45 min |
-| **SECURITY.md** | Add vulnerability disclosure policy and responsible disclosure contact | 15 min |
-| **Issue + PR templates** | Add `.github/ISSUE_TEMPLATE/bug_report.md`, `feature_request.md`, and `PULL_REQUEST_TEMPLATE.md` | 20 min |
-| **API versioning** | Add `/v1/` prefix to all routes to support future non-breaking API evolution | 1 hr |
+| Enhancement | Description |
+|---|---|
+| **Upgrade Java 17 → 21** | Bump `java.version` in pom.xml to 21 — unlocks virtual threads, records, and pattern matching for improved throughput |
+| **Upgrade Spring Boot 3.3 → 3.5** | Update `spring-boot-starter-parent` version and fix any breaking changes; run full test suite after |
+| **JaCoCo code coverage + Codecov badge** | Add JaCoCo plugin to pom.xml, generate XML report in CI, upload to Codecov, add badge to README header |
+| **Extend CI pipeline** | Add Docker image build step and coverage upload to existing `ci.yml` — currently only runs `mvn clean test` |
+| **Dependabot config** | Add `.github/dependabot.yml` for weekly Maven + Docker dependency PRs so versions never fall behind |
+| **GitHub repository topics** | Set topics in repo Settings: `spring-boot`, `java`, `microservices`, `jwt`, `kafka`, `redis`, `kubernetes`, `docker`, `mysql` |
+| **Performance benchmarks** | Run JMeter/k6 load test and add a table: p50/p95/p99 API latency, requests/sec, Kafka consumer lag |
+| **SECURITY.md** | Add vulnerability disclosure policy and responsible disclosure contact |
+| **Issue + PR templates** | Add `.github/ISSUE_TEMPLATE/bug_report.md`, `feature_request.md`, and `PULL_REQUEST_TEMPLATE.md` |
+| **API versioning** | Add `/v1/` prefix to all routes to support future non-breaking API evolution |
 
 ---
 
