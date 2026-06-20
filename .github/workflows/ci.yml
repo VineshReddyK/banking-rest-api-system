@@ -14,15 +14,22 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Set up Java 17
+      - name: Set up Java 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
           cache: 'maven'
 
-      - name: Build and run tests
-        run: mvn clean test
+      - name: Build and run tests with coverage
+        run: mvn clean verify
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: target/site/jacoco/jacoco.xml
+          fail_ci_if_error: false
 
       - name: Upload test results
         if: always()
@@ -30,3 +37,6 @@ jobs:
         with:
           name: test-results
           path: target/surefire-reports/
+
+      - name: Build Docker image
+        run: docker build -t banking-rest-api-system:${{ github.sha }} .

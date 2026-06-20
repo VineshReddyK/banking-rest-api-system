@@ -1,8 +1,9 @@
 # Banking REST API System
 
 ![CI](https://github.com/VineshReddyK/banking-rest-api-system/actions/workflows/ci.yml/badge.svg)
-![Java](https://img.shields.io/badge/Java-17-orange)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3-green)
+![Java](https://img.shields.io/badge/Java-21-orange)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5-green)
+[![codecov](https://codecov.io/gh/VineshReddyK/banking-rest-api-system/branch/main/graph/badge.svg)](https://codecov.io/gh/VineshReddyK/banking-rest-api-system)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 A production-ready Banking REST API built with Java, Spring Boot, Spring Security, JWT (JJWT), BCrypt, Hibernate, JPA, MySQL, Docker, and JUnit.
@@ -38,8 +39,8 @@ A production-ready Banking REST API built with Java, Spring Boot, Spring Securit
 
 | Layer | Technology |
 |-------|-----------|
-| Language | Java 17 |
-| Framework | Spring Boot 3.3 |
+| Language | Java 21 |
+| Framework | Spring Boot 3.5 |
 | Security | Spring Security + JJWT 0.12.6 |
 | Password Hashing | BCrypt |
 | ORM | Spring Data JPA + Hibernate |
@@ -81,24 +82,24 @@ src/main/java/com/vinesh/banking
 
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
-| POST | `/api/auth/register` | No | Register a new user |
-| POST | `/api/auth/login` | No | Login and receive JWT token |
+| POST | `/api/v1/auth/register` | No | Register a new user |
+| POST | `/api/v1/auth/login` | No | Login and receive JWT token |
 
 ### Accounts
 
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
-| POST | `/api/accounts/{userId}` | Yes | Create a new account |
-| GET | `/api/accounts` | Yes | Get all accounts |
+| POST | `/api/v1/accounts/{userId}` | Yes | Create a new account |
+| GET | `/api/v1/accounts` | Yes | Get all accounts |
 
 ### Transactions
 
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
-| POST | `/api/transactions/deposit` | Yes | Deposit funds |
-| POST | `/api/transactions/withdraw` | Yes | Withdraw funds |
-| POST | `/api/transactions/transfer` | Yes | Transfer between accounts |
-| GET | `/api/transactions/{accountId}` | Yes | Get transaction history |
+| POST | `/api/v1/transactions/deposit` | Yes | Deposit funds |
+| POST | `/api/v1/transactions/withdraw` | Yes | Withdraw funds |
+| POST | `/api/v1/transactions/transfer` | Yes | Transfer between accounts |
+| GET | `/api/v1/transactions/{accountId}` | Yes | Get transaction history |
 
 > Full request/response examples: [docs/api-endpoints.md](docs/api-endpoints.md)
 
@@ -108,7 +109,7 @@ src/main/java/com/vinesh/banking
 
 ### Prerequisites
 
-- Java 17+
+- Java 21+
 - Maven 3.9+
 - MySQL 8+
 
@@ -216,7 +217,7 @@ mvn clean test
 
 - Passwords are hashed with **BCrypt** — never stored in plain text
 - JWT tokens are signed with **HMAC-SHA** using a configurable secret key
-- All endpoints except `/api/auth/**` require a valid `Authorization: Bearer <token>` header
+- All endpoints except `/api/v1/auth/**` require a valid `Authorization: Bearer <token>` header
 - Tokens expire after 24 hours (configurable via `jwt.expiration`)
 
 ---
@@ -244,16 +245,8 @@ See [docs/architecture/system-architecture.md](docs/architecture/system-architec
 
 | Enhancement | Description |
 |---|---|
-| **Upgrade Java 17 → 21** | Bump `java.version` in pom.xml to 21 — unlocks virtual threads, records, and pattern matching for improved throughput |
-| **Upgrade Spring Boot 3.3 → 3.5** | Update `spring-boot-starter-parent` version and fix any breaking changes; run full test suite after |
-| **JaCoCo code coverage + Codecov badge** | Add JaCoCo plugin to pom.xml, generate XML report in CI, upload to Codecov, add badge to README header |
-| **Extend CI pipeline** | Add Docker image build step and coverage upload to existing `ci.yml` — currently only runs `mvn clean test` |
-| **Dependabot config** | Add `.github/dependabot.yml` for weekly Maven + Docker dependency PRs so versions never fall behind |
 | **GitHub repository topics** | Set topics in repo Settings: `spring-boot`, `java`, `microservices`, `jwt`, `kafka`, `redis`, `kubernetes`, `docker`, `mysql` |
 | **Performance benchmarks** | Run JMeter/k6 load test and add a table: p50/p95/p99 API latency, requests/sec, Kafka consumer lag |
-| **SECURITY.md** | Add vulnerability disclosure policy and responsible disclosure contact |
-| **Issue + PR templates** | Add `.github/ISSUE_TEMPLATE/bug_report.md`, `feature_request.md`, and `PULL_REQUEST_TEMPLATE.md` |
-| **API versioning** | Add `/v1/` prefix to all routes to support future non-breaking API evolution |
 
 ---
 
