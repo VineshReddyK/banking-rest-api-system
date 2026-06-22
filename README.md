@@ -256,14 +256,7 @@ Load-test configuration: 100 concurrent users, 5-minute sustained run, Docker (4
 | Email notifications on transactions | ✅ Done |
 | Monitoring with Prometheus and Grafana | ✅ Done |
 | Performance benchmarks (JMeter/k6) | ✅ Done |
-
----
-
-## Future Enhancements
-
-| Enhancement | Description |
-|---|---|
-| **GitHub repository topics** | Set topics in repo Settings: `spring-boot`, `java`, `microservices`, `jwt`, `kafka`, `redis`, `kubernetes`, `docker`, `mysql` |
+| GitHub repository topics | ✅ Done |
 
 ---
 
