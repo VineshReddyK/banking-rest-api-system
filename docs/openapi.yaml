@@ -1,0 +1,300 @@
+openapi: 3.0.3
+info:
+  title: Banking REST API
+  description: Production-ready Banking REST API with JWT authentication, account management, and transaction processing.
+  version: 1.0.0
+  contact:
+    name: Vinesh Reddy Kankanalapally
+    url: https://github.com/VineshReddyK
+
+servers:
+  - url: http://localhost:8080
+    description: Local development
+
+security:
+  - BearerAuth: []
+
+paths:
+  /api/v1/auth/register:
+    post:
+      tags: [Authentication]
+      summary: Register a new user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: User registered successfully
+        '409':
+          description: Email already in use
+
+  /api/v1/auth/login:
+    post:
+      tags: [Authentication]
+      summary: Login and receive a JWT token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+
+  /api/v1/accounts/{userId}:
+    post:
+      tags: [Accounts]
+      summary: Create a new bank account for a user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountRequest'
+      responses:
+        '201':
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        '404':
+          description: User not found
+
+  /api/v1/accounts:
+    get:
+      tags: [Accounts]
+      summary: Get all accounts for the authenticated user
+      responses:
+        '200':
+          description: List of accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountResponse'
+
+  /api/v1/transactions/deposit:
+    post:
+      tags: [Transactions]
+      summary: Deposit funds into an account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+      responses:
+        '200':
+          description: Deposit successful
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Deposit Successful. New balance: 1500.0"
+
+  /api/v1/transactions/withdraw:
+    post:
+      tags: [Transactions]
+      summary: Withdraw funds from an account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+      responses:
+        '200':
+          description: Withdrawal successful
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Withdrawal Successful. New balance: 1300.0"
+        '400':
+          description: Insufficient funds
+
+  /api/v1/transactions/transfer:
+    post:
+      tags: [Transactions]
+      summary: Transfer funds between accounts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferRequest'
+      responses:
+        '200':
+          description: Transfer successful
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Transfer Successful. New balance: 1000.0"
+
+  /api/v1/transactions/{accountId}:
+    get:
+      tags: [Transactions]
+      summary: Get transaction history for an account
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Transaction history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionResponse'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    RegisterRequest:
+      type: object
+      required: [username, email, password]
+      properties:
+        username:
+          type: string
+          example: vinesh
+        email:
+          type: string
+          format: email
+          example: vinesh@example.com
+        password:
+          type: string
+          minLength: 8
+          example: password123
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          example: vinesh@example.com
+        password:
+          type: string
+          example: password123
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiJ9...
+
+    CreateAccountRequest:
+      type: object
+      required: [accountType, initialDeposit]
+      properties:
+        accountType:
+          type: string
+          enum: [SAVINGS, CHECKING]
+          example: SAVINGS
+        initialDeposit:
+          type: number
+          format: double
+          example: 1000.00
+
+    AccountResponse:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          example: A1B2C3D4E5F6
+        accountType:
+          type: string
+          example: SAVINGS
+        balance:
+          type: number
+          format: double
+          example: 1000.00
+
+    TransactionRequest:
+      type: object
+      required: [accountId, amount]
+      properties:
+        accountId:
+          type: integer
+          format: int64
+          example: 1
+        amount:
+          type: number
+          format: double
+          example: 500.00
+
+    TransferRequest:
+      type: object
+      required: [accountId, targetAccountId, amount]
+      properties:
+        accountId:
+          type: integer
+          format: int64
+          example: 1
+        targetAccountId:
+          type: integer
+          format: int64
+          example: 2
+        amount:
+          type: number
+          format: double
+          example: 300.00
+
+    TransactionResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        amount:
+          type: number
+          format: double
+          example: 500.00
+        transactionType:
+          type: string
+          enum: [DEPOSIT, WITHDRAWAL, TRANSFER]
+          example: DEPOSIT
+        transactionDate:
+          type: string
+          format: date-time
+          example: "2026-06-17T10:30:00"
