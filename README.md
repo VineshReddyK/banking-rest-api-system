@@ -2,6 +2,8 @@
 
 ![CI](https://github.com/VineshReddyK/banking-rest-api-system/actions/workflows/ci.yml/badge.svg)
 ![CodeQL](https://github.com/VineshReddyK/banking-rest-api-system/actions/workflows/codeql.yml/badge.svg)
+![Docker](https://github.com/VineshReddyK/banking-rest-api-system/actions/workflows/docker-publish.yml/badge.svg)
+![ghcr.io](https://img.shields.io/badge/ghcr.io-vineshreddy%2Fbanking--rest--api--system-blue?logo=docker)
 ![Java](https://img.shields.io/badge/Java-21-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5-green)
 [![codecov](https://codecov.io/gh/VineshReddyK/banking-rest-api-system/branch/main/graph/badge.svg)](https://codecov.io/gh/VineshReddyK/banking-rest-api-system)
