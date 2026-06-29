@@ -6,8 +6,6 @@ import com.vinesh.banking.entity.Transaction;
 import com.vinesh.banking.entity.User;
 import com.vinesh.banking.exception.ResourceNotFoundException;
 import com.vinesh.banking.kafka.TransactionProducer;
-import com.vinesh.banking.service.AuditLogService;
-import com.vinesh.banking.service.EmailNotificationService;
 import com.vinesh.banking.repository.AccountRepository;
 import com.vinesh.banking.repository.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,18 +45,18 @@ class TransactionServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    private User testUser() {
+    private User sampleUser() {
         User u = new User();
         u.setEmail("test@example.com");
         return u;
     }
 
     @Test
-    void deposit_shouldIncreaseBalance() {
+    void deposit_shouldIncreaseAccountBalance() {
         Account account = new Account();
         account.setId(1L);
         account.setBalance(500.0);
-        account.setUser(testUser());
+        account.setUser(sampleUser());
 
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
         when(accountRepository.save(any())).thenReturn(account);
@@ -75,11 +73,11 @@ class TransactionServiceTest {
     }
 
     @Test
-    void withdraw_insufficientFunds_shouldThrow() {
+    void withdraw_insufficientFunds_shouldThrowIllegalArgumentException() {
         Account account = new Account();
         account.setId(1L);
         account.setBalance(100.0);
-        account.setUser(testUser());
+        account.setUser(sampleUser());
 
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
 
@@ -91,16 +89,16 @@ class TransactionServiceTest {
     }
 
     @Test
-    void transfer_shouldMoveFundsBetweenAccounts() {
+    void transfer_shouldMoveFundsFromSourceToTarget() {
         Account source = new Account();
         source.setId(1L);
         source.setBalance(1000.0);
-        source.setUser(testUser());
+        source.setUser(sampleUser());
 
         Account target = new Account();
         target.setId(2L);
         target.setBalance(200.0);
-        target.setUser(testUser());
+        target.setUser(sampleUser());
 
         when(accountRepository.findById(1L)).thenReturn(Optional.of(source));
         when(accountRepository.findById(2L)).thenReturn(Optional.of(target));
@@ -117,5 +115,16 @@ class TransactionServiceTest {
         assertTrue(result.contains("Transfer Successful"));
         assertEquals(700.0, source.getBalance());
         assertEquals(500.0, target.getBalance());
+    }
+
+    @Test
+    void deposit_accountNotFound_shouldThrowResourceNotFoundException() {
+        when(accountRepository.findById(999L)).thenReturn(Optional.empty());
+
+        TransactionRequest request = new TransactionRequest();
+        request.setAccountId(999L);
+        request.setAmount(100.0);
+
+        assertThrows(ResourceNotFoundException.class, () -> transactionService.deposit(request));
     }
 }
