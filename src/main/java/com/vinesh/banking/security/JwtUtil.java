@@ -13,42 +13,45 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    private final String secret;
+    private final long expiration;
 
-    @Value("${jwt.expiration}")
-    private long expiration;
+    public JwtUtil(@Value("${jwt.secret}") String secret,
+                   @Value("${jwt.expiration}") long expiration) {
+        this.secret = secret;
+        this.expiration = expiration;
+    }
 
     public String generateToken(String email) {
         return Jwts.builder()
                 .subject(email)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSigningKey())
+                .signWith(signingKey())
                 .compact();
     }
 
     public String extractEmail(String token) {
-        return getClaims(token).getSubject();
+        return parseClaims(token).getSubject();
     }
 
     public boolean isTokenValid(String token) {
         try {
-            return !getClaims(token).getExpiration().before(new Date());
+            return !parseClaims(token).getExpiration().before(new Date());
         } catch (Exception e) {
             return false;
         }
     }
 
-    private Claims getClaims(String token) {
+    private Claims parseClaims(String token) {
         return Jwts.parser()
-                .verifyWith(getSigningKey())
+                .verifyWith(signingKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
     }
 
-    private SecretKey getSigningKey() {
+    private SecretKey signingKey() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
 }
