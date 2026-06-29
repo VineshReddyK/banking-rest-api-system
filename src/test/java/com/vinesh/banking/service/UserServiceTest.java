@@ -8,8 +8,6 @@ import com.vinesh.banking.exception.DuplicateResourceException;
 import com.vinesh.banking.exception.ResourceNotFoundException;
 import com.vinesh.banking.repository.UserRepository;
 import com.vinesh.banking.security.JwtUtil;
-import com.vinesh.banking.service.AuditLogService;
-import com.vinesh.banking.service.EmailNotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -26,20 +24,11 @@ import static org.mockito.Mockito.when;
 
 class UserServiceTest {
 
-    @Mock
-    private UserRepository userRepository;
-
-    @Mock
-    private JwtUtil jwtUtil;
-
-    @Mock
-    private PasswordEncoder passwordEncoder;
-
-    @Mock
-    private AuditLogService auditLogService;
-
-    @Mock
-    private EmailNotificationService emailNotificationService;
+    @Mock private UserRepository userRepository;
+    @Mock private JwtUtil jwtUtil;
+    @Mock private PasswordEncoder passwordEncoder;
+    @Mock private AuditLogService auditLogService;
+    @Mock private EmailNotificationService emailNotificationService;
 
     @InjectMocks
     private UserService userService;
@@ -60,9 +49,7 @@ class UserServiceTest {
         request.setEmail("test@example.com");
         request.setPassword("pass123");
 
-        String result = userService.registerUser(request);
-
-        assertEquals("User registered successfully", result);
+        assertEquals("User registered successfully", userService.registerUser(request));
     }
 
     @Test
@@ -90,7 +77,6 @@ class UserServiceTest {
         request.setPassword("pass123");
 
         LoginResponse response = userService.loginUser(request);
-
         assertEquals("mock-jwt-token", response.getToken());
     }
 
