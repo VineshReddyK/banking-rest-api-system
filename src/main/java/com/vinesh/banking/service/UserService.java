@@ -8,31 +8,27 @@ import com.vinesh.banking.exception.DuplicateResourceException;
 import com.vinesh.banking.exception.ResourceNotFoundException;
 import com.vinesh.banking.repository.UserRepository;
 import com.vinesh.banking.security.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class UserService {
 
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+    private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
+    private final AuditLogService auditLogService;
+    private final EmailNotificationService emailService;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private AuditLogService auditLogService;
-
-    @Autowired
-    private EmailNotificationService emailNotificationService;
+    public UserService(UserRepository userRepository, JwtUtil jwtUtil,
+                       PasswordEncoder passwordEncoder, AuditLogService auditLogService,
+                       EmailNotificationService emailService) {
+        this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
+        this.auditLogService = auditLogService;
+        this.emailService = emailService;
+    }
 
     public String registerUser(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -44,8 +40,9 @@ public class UserService {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
+
         auditLogService.log("USER_REGISTER", request.getEmail(), "New user registered: " + request.getEmail());
-        emailNotificationService.sendWelcomeEmail(request.getEmail(), request.getUsername());
+        emailService.sendWelcomeEmail(request.getEmail(), request.getUsername());
 
         return "User registered successfully";
     }
@@ -58,11 +55,10 @@ public class UserService {
             throw new IllegalArgumentException("Invalid credentials");
         }
 
-        String token = jwtUtil.generateToken(user.getEmail());
         auditLogService.log("USER_LOGIN", user.getEmail(), "User logged in: " + user.getEmail());
 
         LoginResponse response = new LoginResponse();
-        response.setToken(token);
+        response.setToken(jwtUtil.generateToken(user.getEmail()));
         return response;
     }
 }
