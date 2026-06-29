@@ -22,7 +22,8 @@ public class AuditLog {
     @Column(nullable = false)
     private LocalDateTime timestamp;
 
-    public AuditLog() {}
+    public AuditLog() {
+    }
 
     public AuditLog(String action, String performedBy, String details) {
         this.action = action;
@@ -31,13 +32,39 @@ public class AuditLog {
         this.timestamp = LocalDateTime.now();
     }
 
-    public Long getId() { return id; }
-    public String getAction() { return action; }
-    public void setAction(String action) { this.action = action; }
-    public String getPerformedBy() { return performedBy; }
-    public void setPerformedBy(String performedBy) { this.performedBy = performedBy; }
-    public String getDetails() { return details; }
-    public void setDetails(String details) { this.details = details; }
-    public LocalDateTime getTimestamp() { return timestamp; }
-    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
+    public Long getId() {
+        return id;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getPerformedBy() {
+        return performedBy;
+    }
+
+    public void setPerformedBy(String performedBy) {
+        this.performedBy = performedBy;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
 }
