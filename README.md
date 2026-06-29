@@ -1,13 +1,9 @@
 # Banking REST API System
 
 ![CI](https://github.com/VineshReddyK/banking-rest-api-system/actions/workflows/ci.yml/badge.svg)
-![CodeQL](https://github.com/VineshReddyK/banking-rest-api-system/actions/workflows/codeql.yml/badge.svg)
-![Docker](https://github.com/VineshReddyK/banking-rest-api-system/actions/workflows/docker-publish.yml/badge.svg)
-![ghcr.io](https://img.shields.io/badge/ghcr.io-vineshreddy%2Fbanking--rest--api--system-blue?logo=docker)
 [![API Docs](https://img.shields.io/badge/Swagger%20UI-API%20Docs-85EA2D?logo=swagger)](https://VineshReddyK.github.io/banking-rest-api-system)
 ![Java](https://img.shields.io/badge/Java-21-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5-green)
-[![codecov](https://codecov.io/gh/VineshReddyK/banking-rest-api-system/branch/main/graph/badge.svg)](https://codecov.io/gh/VineshReddyK/banking-rest-api-system)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 A production-ready Banking REST API built with Java, Spring Boot, Spring Security, JWT (JJWT), BCrypt, Hibernate, JPA, MySQL, Docker, and JUnit.
@@ -232,35 +228,20 @@ See [docs/architecture/system-architecture.md](docs/architecture/system-architec
 
 ---
 
-## Performance Benchmarks
-
-Load-test configuration: 100 concurrent users, 5-minute sustained run, Docker (4 vCPU / 8 GB RAM).
-
-| Endpoint | p50 | p95 | p99 | Throughput |
-|---|---|---|---|---|
-| `POST /api/v1/auth/login` | 18 ms | 52 ms | 94 ms | 620 req/s |
-| `GET /api/v1/accounts/{id}` — cache hit | 4 ms | 11 ms | 23 ms | 2,100 req/s |
-| `GET /api/v1/accounts/{id}` — cache miss | 22 ms | 58 ms | 103 ms | 580 req/s |
-| `POST /api/v1/transactions/transfer` | 34 ms | 87 ms | 145 ms | 310 req/s |
-| `GET /api/v1/transactions/{id}` | 9 ms | 28 ms | 61 ms | 1,200 req/s |
-
-- **Redis cache hit rate** (account balance reads): ~78%
-- **Kafka consumer lag** (steady-state): < 50 messages
-
----
-
 ## Roadmap
 
 | Feature | Status |
 |---------|--------|
-| Kubernetes deployment (AWS EKS) | ✅ Done |
-| Redis caching for account balance reads | ✅ Done |
-| Kafka event streaming for transaction notifications | ✅ Done |
-| Audit logging | ✅ Done |
-| Email notifications on transactions | ✅ Done |
-| Monitoring with Prometheus and Grafana | ✅ Done |
-| Performance benchmarks (JMeter/k6) | ✅ Done |
-| GitHub repository topics | ✅ Done |
+| Core REST API (auth, accounts, transactions) | ✅ Done |
+| JWT security + BCrypt password hashing | ✅ Done |
+| Redis caching for account reads | ✅ Done |
+| Kafka event streaming on transactions | ✅ Done |
+| Audit logging + email alerts | ✅ Done |
+| Prometheus + Grafana monitoring | ✅ Done |
+| Kubernetes manifests (AWS EKS) | ✅ Done |
+| Rate limiting per user/IP | 🔲 Planned |
+| Async email with @Async / SQS | 🔲 Planned |
+| Account type enum validation | 🔲 Planned |
 
 ---
 
