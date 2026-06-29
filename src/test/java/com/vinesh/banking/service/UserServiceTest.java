@@ -8,8 +8,6 @@ import com.vinesh.banking.exception.DuplicateResourceException;
 import com.vinesh.banking.exception.ResourceNotFoundException;
 import com.vinesh.banking.repository.UserRepository;
 import com.vinesh.banking.security.JwtUtil;
-import com.vinesh.banking.service.AuditLogService;
-import com.vinesh.banking.service.EmailNotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -50,7 +48,7 @@ class UserServiceTest {
     }
 
     @Test
-    void registerUser_shouldReturnSuccessMessage() {
+    void registerUser_newEmail_shouldReturnSuccessMessage() {
         when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("$2a$10$encodedpassword");
         when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
@@ -66,7 +64,7 @@ class UserServiceTest {
     }
 
     @Test
-    void registerUser_duplicateEmail_shouldThrow() {
+    void registerUser_duplicateEmail_shouldThrowDuplicateResourceException() {
         when(userRepository.existsByEmail("test@example.com")).thenReturn(true);
 
         RegisterRequest request = new RegisterRequest();
@@ -76,7 +74,7 @@ class UserServiceTest {
     }
 
     @Test
-    void loginUser_validCredentials_shouldReturnToken() {
+    void loginUser_validCredentials_shouldReturnJwtToken() {
         User user = new User();
         user.setEmail("test@example.com");
         user.setPassword("$2a$10$encodedpassword");
@@ -95,7 +93,7 @@ class UserServiceTest {
     }
 
     @Test
-    void loginUser_invalidPassword_shouldThrow() {
+    void loginUser_wrongPassword_shouldThrowIllegalArgumentException() {
         User user = new User();
         user.setEmail("test@example.com");
         user.setPassword("$2a$10$encodedpassword");
@@ -111,11 +109,11 @@ class UserServiceTest {
     }
 
     @Test
-    void loginUser_userNotFound_shouldThrow() {
-        when(userRepository.findByEmail("unknown@example.com")).thenReturn(Optional.empty());
+    void loginUser_emailNotRegistered_shouldThrowResourceNotFoundException() {
+        when(userRepository.findByEmail("ghost@example.com")).thenReturn(Optional.empty());
 
         LoginRequest request = new LoginRequest();
-        request.setEmail("unknown@example.com");
+        request.setEmail("ghost@example.com");
         request.setPassword("pass");
 
         assertThrows(ResourceNotFoundException.class, () -> userService.loginUser(request));
