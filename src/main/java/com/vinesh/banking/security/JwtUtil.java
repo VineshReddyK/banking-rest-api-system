@@ -20,10 +20,13 @@ public class JwtUtil {
     private long expiration;
 
     public String generateToken(String email) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + expiration);
+
         return Jwts.builder()
                 .subject(email)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .issuedAt(now)
+                .expiration(expiryDate)
                 .signWith(getSigningKey())
                 .compact();
     }
@@ -34,7 +37,8 @@ public class JwtUtil {
 
     public boolean isTokenValid(String token) {
         try {
-            return !getClaims(token).getExpiration().before(new Date());
+            Date expiry = getClaims(token).getExpiration();
+            return !expiry.before(new Date());
         } catch (Exception e) {
             return false;
         }
@@ -49,6 +53,7 @@ public class JwtUtil {
     }
 
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }
