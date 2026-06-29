@@ -8,6 +8,7 @@ public class TransactionRequest {
     @NotNull(message = "Account ID is required")
     private Long accountId;
 
+    // only required for transfers
     private Long targetAccountId;
 
     @NotNull(message = "Amount is required")
