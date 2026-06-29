@@ -4,7 +4,7 @@ Base URL: `http://localhost:8080`
 
 Swagger UI: `http://localhost:8080/swagger-ui/index.html`
 
-> All endpoints except `/api/auth/**` require a JWT Bearer token in the `Authorization` header.
+> All endpoints except `/api/v1/auth/**` require a JWT Bearer token in the `Authorization` header.
 
 ---
 
@@ -13,7 +13,7 @@ Swagger UI: `http://localhost:8080/swagger-ui/index.html`
 ### Register
 
 ```
-POST /api/auth/register
+POST /api/v1/auth/register
 ```
 
 **Request Body:**
@@ -35,7 +35,7 @@ User registered successfully
 ### Login
 
 ```
-POST /api/auth/login
+POST /api/v1/auth/login
 ```
 
 **Request Body:**
