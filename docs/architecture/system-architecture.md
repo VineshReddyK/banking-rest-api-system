@@ -83,11 +83,12 @@ POST /api/auth/login
 com.vinesh.banking
 ├── BankingApplication.java
 ├── config
-│   └── SwaggerConfig.java          # OpenAPI + JWT bearer scheme
+│   ├── RedisConfig.java             # Cache manager, 10-min TTL
+│   └── SwaggerConfig.java           # OpenAPI + JWT bearer scheme
 ├── controller
-│   ├── AuthController.java          # /api/auth/**
-│   ├── AccountController.java       # /api/accounts/**
-│   └── TransactionController.java   # /api/transactions/**
+│   ├── AuthController.java          # /api/v1/auth/**
+│   ├── AccountController.java       # /api/v1/accounts/**
+│   └── TransactionController.java   # /api/v1/transactions/**
 ├── dto
 │   ├── RegisterRequest.java
 │   ├── LoginRequest.java
@@ -98,15 +99,21 @@ com.vinesh.banking
 ├── entity
 │   ├── User.java
 │   ├── Account.java
-│   └── Transaction.java
+│   ├── Transaction.java
+│   └── AuditLog.java
 ├── exception
 │   ├── ResourceNotFoundException.java
 │   ├── DuplicateResourceException.java
 │   └── GlobalExceptionHandler.java  # Structured JSON error responses
+├── kafka
+│   ├── TransactionProducer.java     # Publishes to transaction-events topic
+│   ├── TransactionConsumer.java
+│   └── TransactionEvent.java
 ├── repository
 │   ├── UserRepository.java
 │   ├── AccountRepository.java
-│   └── TransactionRepository.java
+│   ├── TransactionRepository.java
+│   └── AuditLogRepository.java
 ├── security
 │   ├── JwtUtil.java                 # Token generation + validation
 │   ├── JwtFilter.java               # OncePerRequestFilter
@@ -114,22 +121,29 @@ com.vinesh.banking
 └── service
     ├── UserService.java
     ├── AccountService.java
-    └── TransactionService.java
+    ├── TransactionService.java
+    ├── AuditLogService.java
+    └── EmailNotificationService.java
 ```
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Language | Java 17 |
-| Framework | Spring Boot 3.3 |
+| Language | Java 21 |
+| Framework | Spring Boot 3.5 |
 | Security | Spring Security + JWT (JJWT 0.12.6) |
 | Password Hashing | BCrypt |
 | ORM | Spring Data JPA + Hibernate |
 | Database | MySQL 8 |
-| API Docs | SpringDoc OpenAPI / Swagger UI |
+| Caching | Redis 7 |
+| Messaging | Apache Kafka |
+| Email | Spring Mail (Gmail SMTP) |
+| API Docs | SpringDoc OpenAPI 2.5 / Swagger UI |
+| Monitoring | Prometheus + Grafana |
 | Testing | JUnit 5 + Mockito |
 | Build | Maven |
 | Containerization | Docker (multi-stage build) |
+| Orchestration | Kubernetes (AWS EKS) |
 | CI/CD | GitHub Actions |
 
