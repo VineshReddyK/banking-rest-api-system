@@ -13,6 +13,9 @@ public class TransactionConsumer {
     @KafkaListener(topics = "transaction-events", groupId = "banking-group")
     public void consume(String message) {
         log.info("Received transaction event: {}", message);
-        // Extension point: send email, push notification, trigger audit, etc.
+
+        // TODO: deserialize into TransactionEvent and route based on type
+        //  e.g. DEPOSIT -> push notification, WITHDRAWAL -> fraud check, etc.
+        //  for now just logging so we can verify the pipeline end-to-end
     }
 }
