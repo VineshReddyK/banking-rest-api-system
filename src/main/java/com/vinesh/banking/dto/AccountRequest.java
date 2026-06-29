@@ -1,8 +1,12 @@
 package com.vinesh.banking.dto;
 
+import jakarta.validation.constraints.DecimalMin;
+
 public class AccountRequest {
 
     private String accountType;
+
+    @DecimalMin(value = "0.0", message = "Initial deposit cannot be negative")
     private Double initialDeposit;
 
     public AccountRequest() {
