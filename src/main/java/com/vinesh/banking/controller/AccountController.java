@@ -3,7 +3,9 @@ package com.vinesh.banking.controller;
 import com.vinesh.banking.dto.AccountRequest;
 import com.vinesh.banking.dto.AccountResponse;
 import com.vinesh.banking.service.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,18 +16,27 @@ import java.util.List;
 @RequestMapping("/api/v1/accounts")
 public class AccountController {
 
-    @Autowired
-    private AccountService accountService;
+    private static final Logger log = LoggerFactory.getLogger(AccountController.class);
+
+    private final AccountService accountService;
+
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     @PostMapping("/{userId}")
-    public ResponseEntity<AccountResponse> createAccount(@PathVariable Long userId,
-                                                          @jakarta.validation.Valid @RequestBody AccountRequest request) {
-        AccountResponse response = accountService.createAccount(userId, request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public ResponseEntity<AccountResponse> createAccount(
+            @PathVariable Long userId,
+            @Valid @RequestBody AccountRequest request) {
+
+        log.debug("Creating account for userId={}", userId);
+        var created = accountService.createAccount(userId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @GetMapping
     public ResponseEntity<List<AccountResponse>> getAccounts() {
-        return ResponseEntity.ok(accountService.getAccounts());
+        var accounts = accountService.getAccounts();
+        return ResponseEntity.ok(accounts);
     }
 }
