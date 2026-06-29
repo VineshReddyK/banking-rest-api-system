@@ -8,26 +8,10 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in this project, please report it responsibly.
+If you find a security issue, please don't open a public GitHub issue — email me directly at **vineshreddyy.k@gmail.com**.
 
-**Do not open a public GitHub issue for security vulnerabilities.**
+Include what you found, how to reproduce it, and what the impact might be. I'll get back to you as soon as I can and work on a fix.
 
-### How to Report
+## Scope
 
-Email: **vineshreddyy.k@gmail.com**
-
-Include:
-- Description of the vulnerability
-- Steps to reproduce
-- Potential impact
-- Suggested fix (if any)
-
-### Response Timeline
-
-- **Acknowledgment**: Within 48 hours
-- **Status update**: Within 7 days
-- **Resolution**: Within 30 days for critical issues
-
-### Scope
-
-This policy applies to the `banking-rest-api-system` repository. Vulnerabilities in third-party dependencies should be reported to their respective maintainers.
+This applies to the `banking-rest-api-system` repository. Issues in third-party dependencies should go to their maintainers.
