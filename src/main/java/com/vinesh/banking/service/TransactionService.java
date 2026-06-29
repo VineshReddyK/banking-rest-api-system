@@ -8,7 +8,6 @@ import com.vinesh.banking.kafka.TransactionEvent;
 import com.vinesh.banking.kafka.TransactionProducer;
 import com.vinesh.banking.repository.AccountRepository;
 import com.vinesh.banking.repository.TransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,107 +18,123 @@ import java.util.List;
 @Service
 public class TransactionService {
 
-    @Autowired
-    private TransactionRepository transactionRepository;
+    private final TransactionRepository transactionRepository;
+    private final AccountRepository accountRepository;
+    private final TransactionProducer transactionProducer;
+    private final AuditLogService auditLogService;
+    private final EmailNotificationService emailNotificationService;
 
-    @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
-    private TransactionProducer transactionProducer;
-
-    @Autowired
-    private AuditLogService auditLogService;
-
-    @Autowired
-    private EmailNotificationService emailNotificationService;
+    public TransactionService(TransactionRepository transactionRepository,
+                              AccountRepository accountRepository,
+                              TransactionProducer transactionProducer,
+                              AuditLogService auditLogService,
+                              EmailNotificationService emailNotificationService) {
+        this.transactionRepository = transactionRepository;
+        this.accountRepository = accountRepository;
+        this.transactionProducer = transactionProducer;
+        this.auditLogService = auditLogService;
+        this.emailNotificationService = emailNotificationService;
+    }
 
     @Transactional
     @CacheEvict(value = "accounts", allEntries = true)
     public String deposit(TransactionRequest request) {
-        Account account = accountRepository.findById(request.getAccountId())
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + request.getAccountId()));
+        var account = findAccountOrThrow(request.getAccountId());
 
-        account.setBalance(account.getBalance() + request.getAmount());
+        double newBalance = account.getBalance() + request.getAmount();
+        account.setBalance(newBalance);
         accountRepository.save(account);
 
-        Transaction transaction = new Transaction();
-        transaction.setAccount(account);
-        transaction.setAmount(request.getAmount());
-        transaction.setTransactionType("DEPOSIT");
-        transaction.setTransactionDate(LocalDateTime.now());
-        transactionRepository.save(transaction);
-        transactionProducer.publish(new TransactionEvent("DEPOSIT", account.getId(), request.getAmount(), account.getBalance()));
-        auditLogService.log("DEPOSIT", "account:" + account.getId(), "Deposited $" + request.getAmount() + ", new balance: $" + account.getBalance());
-        emailNotificationService.sendDepositAlert(account.getUser().getEmail(), account.getId(), request.getAmount(), account.getBalance());
+        recordTransaction(account, request.getAmount(), "DEPOSIT");
+        transactionProducer.publish(new TransactionEvent("DEPOSIT", account.getId(), request.getAmount(), newBalance));
 
-        return "Deposit Successful. New balance: " + account.getBalance();
+        auditLogService.log("DEPOSIT", "account:" + account.getId(),
+                "Deposited $" + request.getAmount() + ", new balance: $" + newBalance);
+        emailNotificationService.sendDepositAlert(
+                account.getUser().getEmail(), account.getId(), request.getAmount(), newBalance);
+
+        return "Deposit Successful. New balance: " + newBalance;
     }
 
     @Transactional
     @CacheEvict(value = "accounts", allEntries = true)
     public String withdraw(TransactionRequest request) {
-        Account account = accountRepository.findById(request.getAccountId())
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + request.getAccountId()));
+        var account = findAccountOrThrow(request.getAccountId());
 
+        // TODO: might want to add an overdraft limit check here later
         if (account.getBalance() < request.getAmount()) {
-            throw new IllegalArgumentException("Insufficient funds. Current balance: " + account.getBalance());
+            throw new IllegalArgumentException("Insufficient funds. Available balance: " + account.getBalance());
         }
 
-        account.setBalance(account.getBalance() - request.getAmount());
+        double newBalance = account.getBalance() - request.getAmount();
+        account.setBalance(newBalance);
         accountRepository.save(account);
 
-        Transaction transaction = new Transaction();
-        transaction.setAccount(account);
-        transaction.setAmount(request.getAmount());
-        transaction.setTransactionType("WITHDRAWAL");
-        transaction.setTransactionDate(LocalDateTime.now());
-        transactionRepository.save(transaction);
-        transactionProducer.publish(new TransactionEvent("WITHDRAWAL", account.getId(), request.getAmount(), account.getBalance()));
-        auditLogService.log("WITHDRAWAL", "account:" + account.getId(), "Withdrew $" + request.getAmount() + ", new balance: $" + account.getBalance());
-        emailNotificationService.sendWithdrawalAlert(account.getUser().getEmail(), account.getId(), request.getAmount(), account.getBalance());
+        recordTransaction(account, request.getAmount(), "WITHDRAWAL");
+        transactionProducer.publish(new TransactionEvent("WITHDRAWAL", account.getId(), request.getAmount(), newBalance));
+        auditLogService.log("WITHDRAWAL", "account:" + account.getId(),
+                "Withdrew $" + request.getAmount() + ", new balance: $" + newBalance);
+        emailNotificationService.sendWithdrawalAlert(
+                account.getUser().getEmail(), account.getId(), request.getAmount(), newBalance);
 
-        return "Withdrawal Successful. New balance: " + account.getBalance();
+        return "Withdrawal Successful. New balance: " + newBalance;
     }
 
     @Transactional
     @CacheEvict(value = "accounts", allEntries = true)
     public String transfer(TransactionRequest request) {
-        Account source = accountRepository.findById(request.getAccountId())
-                .orElseThrow(() -> new ResourceNotFoundException("Source account not found with id: " + request.getAccountId()));
-        Account target = accountRepository.findById(request.getTargetAccountId())
-                .orElseThrow(() -> new ResourceNotFoundException("Target account not found with id: " + request.getTargetAccountId()));
+        var source = findAccountOrThrow(request.getAccountId());
+        var target = findAccountOrThrow(request.getTargetAccountId());
 
-        if (source.getBalance() < request.getAmount()) {
-            throw new IllegalArgumentException("Insufficient funds. Current balance: " + source.getBalance());
+        if (source.getId().equals(target.getId())) {
+            throw new IllegalArgumentException("Cannot transfer to the same account");
         }
 
-        source.setBalance(source.getBalance() - request.getAmount());
-        target.setBalance(target.getBalance() + request.getAmount());
+        if (source.getBalance() < request.getAmount()) {
+            throw new IllegalArgumentException("Insufficient funds. Available balance: " + source.getBalance());
+        }
+
+        double sourceNewBalance = source.getBalance() - request.getAmount();
+        double targetNewBalance = target.getBalance() + request.getAmount();
+
+        source.setBalance(sourceNewBalance);
+        target.setBalance(targetNewBalance);
+
+        // save both before recording transactions
         accountRepository.save(source);
         accountRepository.save(target);
 
-        Transaction debit = new Transaction();
-        debit.setAccount(source);
-        debit.setAmount(request.getAmount());
-        debit.setTransactionType("TRANSFER_DEBIT");
-        debit.setTransactionDate(LocalDateTime.now());
-        transactionRepository.save(debit);
+        recordTransaction(source, request.getAmount(), "TRANSFER_DEBIT");
+        recordTransaction(target, request.getAmount(), "TRANSFER_CREDIT");
 
-        Transaction credit = new Transaction();
-        credit.setAccount(target);
-        credit.setAmount(request.getAmount());
-        credit.setTransactionType("TRANSFER_CREDIT");
-        credit.setTransactionDate(LocalDateTime.now());
-        transactionRepository.save(credit);
-        transactionProducer.publish(new TransactionEvent("TRANSFER", source.getId(), request.getAmount(), source.getBalance()));
-        auditLogService.log("TRANSFER", "account:" + source.getId(), "Transferred $" + request.getAmount() + " to account:" + target.getId() + ", new balance: $" + source.getBalance());
-        emailNotificationService.sendTransferAlert(source.getUser().getEmail(), source.getId(), target.getId(), request.getAmount(), source.getBalance());
+        transactionProducer.publish(
+                new TransactionEvent("TRANSFER", source.getId(), request.getAmount(), sourceNewBalance));
+        auditLogService.log("TRANSFER", "account:" + source.getId(),
+                "Transferred $" + request.getAmount() + " to account:" + target.getId()
+                        + ", new balance: $" + sourceNewBalance);
+        emailNotificationService.sendTransferAlert(
+                source.getUser().getEmail(), source.getId(), target.getId(),
+                request.getAmount(), sourceNewBalance);
 
-        return "Transfer Successful. New balance: " + source.getBalance();
+        return "Transfer Successful. New balance: " + sourceNewBalance;
     }
 
     public List<Transaction> getTransactionHistory(Long accountId) {
         return transactionRepository.findByAccountId(accountId);
+    }
+
+
+    private Account findAccountOrThrow(Long accountId) {
+        return accountRepository.findById(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + accountId));
+    }
+
+    private void recordTransaction(Account account, Double amount, String type) {
+        Transaction tx = new Transaction();
+        tx.setAccount(account);
+        tx.setAmount(amount);
+        tx.setTransactionType(type);
+        tx.setTransactionDate(LocalDateTime.now());
+        transactionRepository.save(tx);
     }
 }
