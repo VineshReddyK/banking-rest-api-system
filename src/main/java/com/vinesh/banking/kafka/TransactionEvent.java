@@ -10,7 +10,8 @@ public class TransactionEvent {
     private Double newBalance;
     private LocalDateTime timestamp;
 
-    public TransactionEvent() {}
+    public TransactionEvent() {
+    }
 
     public TransactionEvent(String type, Long accountId, Double amount, Double newBalance) {
         this.type = type;
@@ -20,20 +21,45 @@ public class TransactionEvent {
         this.timestamp = LocalDateTime.now();
     }
 
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
+    public String getType() {
+        return type;
+    }
 
-    public Long getAccountId() { return accountId; }
-    public void setAccountId(Long accountId) { this.accountId = accountId; }
+    public void setType(String type) {
+        this.type = type;
+    }
 
-    public Double getAmount() { return amount; }
-    public void setAmount(Double amount) { this.amount = amount; }
+    public Long getAccountId() {
+        return accountId;
+    }
 
-    public Double getNewBalance() { return newBalance; }
-    public void setNewBalance(Double newBalance) { this.newBalance = newBalance; }
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
+    }
 
-    public LocalDateTime getTimestamp() { return timestamp; }
-    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public Double getNewBalance() {
+        return newBalance;
+    }
+
+    public void setNewBalance(Double newBalance) {
+        this.newBalance = newBalance;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
 
     @Override
     public String toString() {
