@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,19 +46,19 @@ class AccountServiceTest {
         Account saved = new Account();
         saved.setAccountNumber("ABC123");
         saved.setAccountType("SAVINGS");
-        saved.setBalance(500.0);
+        saved.setBalance(new BigDecimal("500.00"));
         saved.setUser(user);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(accountRepository.save(any(Account.class))).thenReturn(saved);
 
         AccountRequest request = new AccountRequest();
-        request.setInitialDeposit(500.0);
+        request.setInitialDeposit(new BigDecimal("500.00"));
 
         AccountResponse response = accountService.createAccount(1L, request);
 
         assertEquals("ABC123", response.getAccountNumber());
-        assertEquals(500.0, response.getBalance());
+        assertEquals(new BigDecimal("500.00"), response.getBalance());
     }
 
     @Test
@@ -65,7 +66,7 @@ class AccountServiceTest {
         when(userRepository.findById(99L)).thenReturn(Optional.empty());
 
         AccountRequest request = new AccountRequest();
-        request.setInitialDeposit(100.0);
+        request.setInitialDeposit(new BigDecimal("100.00"));
 
         assertThrows(ResourceNotFoundException.class, () -> accountService.createAccount(99L, request));
     }
@@ -74,7 +75,7 @@ class AccountServiceTest {
     void getAccounts_shouldReturnList() {
         Account account = new Account();
         account.setAccountNumber("XYZ789");
-        account.setBalance(1000.0);
+        account.setBalance(new BigDecimal("1000.00"));
 
         when(accountRepository.findAll()).thenReturn(List.of(account));
 
