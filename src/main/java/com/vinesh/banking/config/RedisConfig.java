@@ -15,15 +15,20 @@ import java.time.Duration;
 @EnableCaching
 public class RedisConfig {
 
+    // 10 minutes feels right for account reads — stale data is evicted on every write anyway
+    private static final Duration DEFAULT_TTL = Duration.ofMinutes(10);
+
     @Bean
-    public RedisCacheManager cacheManager(RedisConnectionFactory factory) {
-        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofMinutes(10))
-                .serializeValuesWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(
-                                new GenericJackson2JsonRedisSerializer()
-                        )
-                );
-        return RedisCacheManager.builder(factory).cacheDefaults(config).build();
+    public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
+        var serializationPair = RedisSerializationContext.SerializationPair
+                .fromSerializer(new GenericJackson2JsonRedisSerializer());
+
+        RedisCacheConfiguration cacheConfig = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(DEFAULT_TTL)
+                .serializeValuesWith(serializationPair);
+
+        return RedisCacheManager.builder(connectionFactory)
+                .cacheDefaults(cacheConfig)
+                .build();
     }
 }
