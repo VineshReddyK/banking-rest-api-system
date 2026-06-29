@@ -42,14 +42,14 @@ class AccountServiceTest {
         user.setId(1L);
         user.setEmail("test@example.com");
 
-        Account saved = new Account();
-        saved.setAccountNumber("ABC123");
-        saved.setAccountType("SAVINGS");
-        saved.setBalance(500.0);
-        saved.setUser(user);
+        Account savedAccount = new Account();
+        savedAccount.setAccountNumber("ABC123");
+        savedAccount.setAccountType("SAVINGS");
+        savedAccount.setBalance(500.0);
+        savedAccount.setUser(user);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(accountRepository.save(any(Account.class))).thenReturn(saved);
+        when(accountRepository.save(any(Account.class))).thenReturn(savedAccount);
 
         AccountRequest request = new AccountRequest();
         request.setInitialDeposit(500.0);
@@ -61,7 +61,7 @@ class AccountServiceTest {
     }
 
     @Test
-    void createAccount_userNotFound_shouldThrow() {
+    void createAccount_userNotFound_shouldThrowResourceNotFoundException() {
         when(userRepository.findById(99L)).thenReturn(Optional.empty());
 
         AccountRequest request = new AccountRequest();
@@ -71,9 +71,10 @@ class AccountServiceTest {
     }
 
     @Test
-    void getAccounts_shouldReturnList() {
+    void getAccounts_shouldReturnMappedList() {
         Account account = new Account();
         account.setAccountNumber("XYZ789");
+        account.setAccountType("CHECKING");
         account.setBalance(1000.0);
 
         when(accountRepository.findAll()).thenReturn(List.of(account));
@@ -82,5 +83,6 @@ class AccountServiceTest {
 
         assertEquals(1, result.size());
         assertEquals("XYZ789", result.get(0).getAccountNumber());
+        assertEquals(1000.0, result.get(0).getBalance());
     }
 }
