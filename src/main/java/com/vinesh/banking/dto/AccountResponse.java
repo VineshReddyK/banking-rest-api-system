@@ -1,10 +1,12 @@
 package com.vinesh.banking.dto;
 
+import java.math.BigDecimal;
+
 public class AccountResponse {
 
     private String accountNumber;
     private String accountType;
-    private Double balance;
+    private BigDecimal balance;
 
     public AccountResponse() {}
 
@@ -14,6 +16,6 @@ public class AccountResponse {
     public String getAccountType() { return accountType; }
     public void setAccountType(String accountType) { this.accountType = accountType; }
 
-    public Double getBalance() { return balance; }
-    public void setBalance(Double balance) { this.balance = balance; }
+    public BigDecimal getBalance() { return balance; }
+    public void setBalance(BigDecimal balance) { this.balance = balance; }
 }
