@@ -7,23 +7,24 @@ import com.vinesh.banking.entity.User;
 import com.vinesh.banking.exception.ResourceNotFoundException;
 import com.vinesh.banking.repository.AccountRepository;
 import com.vinesh.banking.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
 
-    @Autowired
-    private AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    public AccountService(AccountRepository accountRepository, UserRepository userRepository) {
+        this.accountRepository = accountRepository;
+        this.userRepository = userRepository;
+    }
 
     @CacheEvict(value = "accounts", allEntries = true)
     public AccountResponse createAccount(Long userId, AccountRequest request) {
@@ -33,26 +34,25 @@ public class AccountService {
         Account account = new Account();
         account.setAccountNumber(UUID.randomUUID().toString().replace("-", "").substring(0, 12).toUpperCase());
         account.setAccountType(request.getAccountType() != null ? request.getAccountType() : "SAVINGS");
-        account.setBalance(request.getInitialDeposit() != null ? request.getInitialDeposit() : 0.0);
+        account.setBalance(request.getInitialDeposit() != null ? request.getInitialDeposit() : BigDecimal.ZERO);
         account.setUser(user);
 
         Account saved = accountRepository.save(account);
-
-        AccountResponse response = new AccountResponse();
-        response.setAccountNumber(saved.getAccountNumber());
-        response.setAccountType(saved.getAccountType());
-        response.setBalance(saved.getBalance());
-        return response;
+        return toResponse(saved);
     }
 
     @Cacheable(value = "accounts")
     public List<AccountResponse> getAccounts() {
-        return accountRepository.findAll().stream().map(account -> {
-            AccountResponse response = new AccountResponse();
-            response.setAccountNumber(account.getAccountNumber());
-            response.setBalance(account.getBalance());
-            response.setAccountType(account.getAccountType());
-            return response;
-        }).collect(Collectors.toList());
+        return accountRepository.findAll().stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    private AccountResponse toResponse(Account account) {
+        AccountResponse r = new AccountResponse();
+        r.setAccountNumber(account.getAccountNumber());
+        r.setAccountType(account.getAccountType());
+        r.setBalance(account.getBalance());
+        return r;
     }
 }
