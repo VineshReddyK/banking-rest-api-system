@@ -1,26 +1,17 @@
 package com.vinesh.banking.dto;
 
+import java.math.BigDecimal;
+
 public class AccountRequest {
 
     private String accountType;
-    private Double initialDeposit;
+    private BigDecimal initialDeposit;
 
-    public AccountRequest() {
-    }
+    public AccountRequest() {}
 
-    public String getAccountType() {
-        return accountType;
-    }
+    public String getAccountType() { return accountType; }
+    public void setAccountType(String accountType) { this.accountType = accountType; }
 
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
-    }
-
-    public Double getInitialDeposit() {
-        return initialDeposit;
-    }
-
-    public void setInitialDeposit(Double initialDeposit) {
-        this.initialDeposit = initialDeposit;
-    }
+    public BigDecimal getInitialDeposit() { return initialDeposit; }
+    public void setInitialDeposit(BigDecimal initialDeposit) { this.initialDeposit = initialDeposit; }
 }
