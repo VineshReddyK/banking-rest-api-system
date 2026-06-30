@@ -1,6 +1,7 @@
 # Banking REST API System
 
 ![CI](https://github.com/VineshReddyK/banking-rest-api-system/actions/workflows/ci.yml/badge.svg)
+[![codecov](https://codecov.io/gh/VineshReddyK/banking-rest-api-system/branch/main/graph/badge.svg)](https://codecov.io/gh/VineshReddyK/banking-rest-api-system)
 [![API Docs](https://img.shields.io/badge/Swagger%20UI-API%20Docs-85EA2D?logo=swagger)](https://VineshReddyK.github.io/banking-rest-api-system)
 ![Java](https://img.shields.io/badge/Java-21-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5-green)
