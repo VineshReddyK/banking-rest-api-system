@@ -10,12 +10,16 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+// handles token generation, parsing, and validation for the whole app.
+// email is the subject claim — every downstream filter and service
+// extracts the user identity from here.
 @Component
 public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String secret;
 
+    // TTL in milliseconds, pulled from application.properties
     @Value("${jwt.expiration}")
     private long expiration;
 
@@ -35,6 +39,8 @@ public class JwtUtil {
         return getClaims(token).getSubject();
     }
 
+    // catches malformed/expired/tampered tokens in one shot —
+    // any jjwt exception means the token is unusable
     public boolean isTokenValid(String token) {
         try {
             Date expiry = getClaims(token).getExpiration();
@@ -52,6 +58,8 @@ public class JwtUtil {
                 .getPayload();
     }
 
+    // base64-decode the configured secret into an HMAC-SHA key.
+    // the secret must be at least 256 bits after decoding or jjwt throws.
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
