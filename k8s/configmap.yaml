@@ -1,3 +1,4 @@
+# non-secret Spring properties — injected via envFrom in the deployment
 apiVersion: v1
 kind: ConfigMap
 metadata:
