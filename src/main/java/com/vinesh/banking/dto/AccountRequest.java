@@ -2,6 +2,8 @@ package com.vinesh.banking.dto;
 
 import jakarta.validation.constraints.DecimalMin;
 
+// inbound payload for creating a new bank account.
+// accountType defaults to SAVINGS if omitted.
 public class AccountRequest {
 
     private String accountType;
