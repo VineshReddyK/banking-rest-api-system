@@ -1,3 +1,4 @@
+# pre-configures Prometheus as the default Grafana datasource
 apiVersion: 1
 
 datasources:
