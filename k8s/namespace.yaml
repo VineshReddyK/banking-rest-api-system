@@ -1,3 +1,4 @@
+# everything lives under the "banking" namespace so it's easy to tear down
 apiVersion: v1
 kind: Namespace
 metadata:
