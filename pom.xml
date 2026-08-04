@@ -5,6 +5,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- inherit Spring Boot defaults — version management, plugin config, etc. -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -25,6 +26,7 @@
 
     <dependencies>
 
+        <!-- core web + security + validation -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -118,6 +120,7 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
 
+        <!-- H2 for unit tests — avoids needing a real MySQL instance in CI -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
