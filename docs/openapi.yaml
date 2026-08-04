@@ -1,3 +1,4 @@
+# hand-written OpenAPI spec — the Swagger UI page (docs/index.html) loads this
 openapi: 3.0.3
 info:
   title: Banking REST API
