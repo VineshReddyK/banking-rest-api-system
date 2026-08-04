@@ -3,6 +3,7 @@ package com.vinesh.banking.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+// email + password — the only two fields needed for authentication
 public class LoginRequest {
 
     @NotBlank(message = "Email is required")
