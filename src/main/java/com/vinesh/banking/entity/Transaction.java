@@ -3,6 +3,8 @@ package com.vinesh.banking.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+// immutable ledger row — once a transaction is recorded it's never
+// updated or deleted. the history endpoint reads directly from this table.
 @Entity
 @Table(name = "transactions")
 public class Transaction {
