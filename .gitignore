@@ -1,3 +1,4 @@
+# keep build artifacts and IDE junk out of the repo
 # Maven
 target/
 *.class
