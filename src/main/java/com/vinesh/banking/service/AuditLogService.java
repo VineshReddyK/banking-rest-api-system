@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+// thin wrapper around the audit_log table — every security-relevant
+// action (login, register, deposit, withdrawal, transfer) gets recorded
+// here so there's an immutable trail for compliance reviews.
 @Service
 public class AuditLogService {
 
