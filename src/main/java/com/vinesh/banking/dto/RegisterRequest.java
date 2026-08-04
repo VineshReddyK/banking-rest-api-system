@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+// validated on the way in — Spring rejects the request before it
+// reaches the service if any of these constraints fail.
 public class RegisterRequest {
 
     @NotBlank(message = "Username is required")
