@@ -2,6 +2,9 @@ package com.vinesh.banking.entity;
 
 import jakarta.persistence.*;
 
+// a user can have multiple accounts (savings, checking, etc.).
+// balance is updated transactionally by the service layer on
+// every deposit, withdrawal, or transfer.
 @Entity
 @Table(name = "accounts")
 public class Account {
@@ -19,6 +22,7 @@ public class Account {
     @Column(nullable = false)
     private Double balance;
 
+    // lazy-loaded to avoid pulling the full user on every account query
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
