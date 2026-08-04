@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// account CRUD — all endpoints here require a valid JWT.
+// the listing is backed by Redis cache so it stays snappy
+// even if the accounts table gets large.
 @RestController
 @RequestMapping("/api/v1/accounts")
 public class AccountController {
