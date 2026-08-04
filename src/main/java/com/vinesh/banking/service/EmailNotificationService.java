@@ -7,6 +7,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+// sends transactional email alerts through Spring Mail.
+// every method swallows SMTP failures on purpose — a busted mail server
+// should never roll back a deposit or withdrawal.
 // TODO: consider making this async with @Async so transactions don't block waiting for SMTP
 @Service
 public class EmailNotificationService {
@@ -64,6 +67,7 @@ public class EmailNotificationService {
         sendTransactionAlert(toEmail, subject, body);
     }
 
+    // fires on registration — gives the user an immediate confirmation
     public void sendWelcomeEmail(String toEmail, String username) {
         String subject = "Welcome to Banking REST API!";
         String body = String.format(
