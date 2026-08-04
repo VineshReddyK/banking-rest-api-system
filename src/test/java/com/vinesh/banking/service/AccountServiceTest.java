@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+// covers create, not-found, and listing — all mocked so no DB needed
 class AccountServiceTest {
 
     @Mock
