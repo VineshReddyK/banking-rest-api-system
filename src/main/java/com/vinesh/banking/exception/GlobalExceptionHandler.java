@@ -11,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+// central error handler — maps domain exceptions to clean JSON responses
+// so the client never sees a raw Spring stack trace.
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
