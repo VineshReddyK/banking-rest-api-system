@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+// listens on the transaction-events topic. right now it just logs —
+// the plan is to add routing logic for fraud checks and push notifications.
 @Service
 public class TransactionConsumer {
 
