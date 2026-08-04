@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+// publishes every transaction (deposit, withdrawal, transfer) to Kafka
+// as a JSON payload. the consumer picks these up for downstream processing.
 @Service
 public class TransactionProducer {
 
