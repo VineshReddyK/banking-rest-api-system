@@ -2,6 +2,9 @@ package com.vinesh.banking.kafka;
 
 import java.time.LocalDateTime;
 
+// Kafka message payload — serialized to JSON by the producer and
+// deserialized by the consumer. the "type" field determines how
+// downstream processors handle each event.
 public class TransactionEvent {
 
     private String type;
