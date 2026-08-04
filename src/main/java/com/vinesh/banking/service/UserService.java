@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+// registration and login — the two entry points for any user.
+// audit logging and welcome emails fire here rather than in the
+// controller so they can't be bypassed if we ever add a second caller.
 @Service
 public class UserService {
 
@@ -59,6 +62,7 @@ public class UserService {
         return "User registered successfully";
     }
 
+    // look up by email, verify the password hash, and hand back a fresh JWT
     public LoginResponse loginUser(LoginRequest request) {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("No account found for email: " + request.getEmail()));
