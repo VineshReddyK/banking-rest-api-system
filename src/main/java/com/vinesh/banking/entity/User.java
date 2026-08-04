@@ -2,6 +2,8 @@ package com.vinesh.banking.entity;
 
 import jakarta.persistence.*;
 
+// maps to the "users" table — email is the unique login identifier,
+// password is stored as a BCrypt hash (never plaintext).
 @Entity
 @Table(name = "users")
 public class User {
@@ -13,6 +15,7 @@ public class User {
     @Column(nullable = false)
     private String username;
 
+    // email doubles as the JWT subject claim
     @Column(nullable = false, unique = true)
     private String email;
 
