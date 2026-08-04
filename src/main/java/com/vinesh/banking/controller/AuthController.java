@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// public endpoints — no JWT required. register creates the user and
+// fires a welcome email, login hands back a signed token.
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
