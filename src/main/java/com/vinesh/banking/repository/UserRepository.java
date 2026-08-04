@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
+// Spring Data generates the queries — we just declare the method signatures.
+// existsBy* is faster than findBy* when you only need a boolean check.
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
