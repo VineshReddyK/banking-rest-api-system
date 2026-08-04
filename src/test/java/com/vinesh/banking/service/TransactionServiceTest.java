@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+// exercises deposit, withdraw (insufficient funds), transfer, and missing-account edge cases
 class TransactionServiceTest {
 
     @Mock
