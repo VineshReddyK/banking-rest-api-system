@@ -1,5 +1,7 @@
 package com.vinesh.banking.dto;
 
+// returned from account creation and listing — keeps the user entity
+// out of the API response so we never accidentally leak the password hash.
 public class AccountResponse {
 
     private String accountNumber;
