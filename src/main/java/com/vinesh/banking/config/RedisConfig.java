@@ -11,6 +11,8 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 
 import java.time.Duration;
 
+// wires Spring's @Cacheable / @CacheEvict to a Redis backend.
+// values are serialized as JSON so they're human-readable in redis-cli.
 @Configuration
 @EnableCaching
 public class RedisConfig {
