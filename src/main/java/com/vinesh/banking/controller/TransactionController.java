@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// exposes deposit, withdraw, transfer, and history.
+// all write operations are transactional in the service layer —
+// the controller just validates input and returns the result.
 @RestController
 @RequestMapping("/api/v1/transactions")
 public class TransactionController {
