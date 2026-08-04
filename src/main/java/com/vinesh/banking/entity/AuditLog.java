@@ -3,6 +3,9 @@ package com.vinesh.banking.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+// compliance audit trail — records who did what and when.
+// timestamp is set in the constructor so it can't be forgotten
+// by callers.
 @Entity
 @Table(name = "audit_logs")
 public class AuditLog {
