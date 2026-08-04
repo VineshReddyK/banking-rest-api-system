@@ -1,3 +1,4 @@
+# scales between 2 and 10 pods based on CPU (70%) and memory (80%)
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
