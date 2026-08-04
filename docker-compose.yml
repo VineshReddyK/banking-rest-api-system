@@ -1,3 +1,4 @@
+# spins up the full stack locally: MySQL, Redis, Kafka, the API, and monitoring
 version: '3.8'
 
 services:
