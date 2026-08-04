@@ -1,3 +1,5 @@
+# multi-stage: first stage pulls deps and compiles, second stage
+# copies just the fat jar into a slim JRE image (~300 MB vs ~800 MB)
 FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY pom.xml .
