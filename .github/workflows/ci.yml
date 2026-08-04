@@ -1,3 +1,4 @@
+# runs on every push/PR to main — compile, test, coverage, then build the Docker image
 name: Banking REST API CI
 
 on:
