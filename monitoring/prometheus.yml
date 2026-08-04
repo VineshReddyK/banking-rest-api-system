@@ -1,3 +1,4 @@
+# scrapes the Spring Boot actuator prometheus endpoint every 10s
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
