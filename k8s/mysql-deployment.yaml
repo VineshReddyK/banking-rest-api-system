@@ -1,3 +1,4 @@
+# MySQL deployment + headless service + 5Gi EBS volume (gp2)
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
