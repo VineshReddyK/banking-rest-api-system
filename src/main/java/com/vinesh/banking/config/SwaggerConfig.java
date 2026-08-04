@@ -9,6 +9,8 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+// customizes the Swagger UI page — sets the API title, contact info,
+// and wires up the "Authorize" button so testers can paste a JWT.
 @Configuration
 public class SwaggerConfig {
 
