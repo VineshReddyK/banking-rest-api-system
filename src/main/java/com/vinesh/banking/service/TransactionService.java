@@ -15,6 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// the core money-movement service — deposit, withdraw, and transfer all
+// run inside a @Transactional boundary so partial updates are impossible.
+// every operation fires a Kafka event, writes an audit log entry, and
+// sends an email alert to the account holder.
 @Service
 public class TransactionService {
 
@@ -119,16 +123,18 @@ public class TransactionService {
         return "Transfer Successful. New balance: " + sourceNewBalance;
     }
 
+    // returns all transactions for a given account, newest first from the db
     public List<Transaction> getTransactionHistory(Long accountId) {
         return transactionRepository.findByAccountId(accountId);
     }
 
-
+    // central lookup so the "not found" message stays consistent
     private Account findAccountOrThrow(Long accountId) {
         return accountRepository.findById(accountId)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + accountId));
     }
 
+    // persist the transaction row — this is the source of truth for history
     private void recordTransaction(Account account, Double amount, String type) {
         Transaction tx = new Transaction();
         tx.setAccount(account);
