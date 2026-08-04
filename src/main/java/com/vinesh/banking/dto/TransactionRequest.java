@@ -3,6 +3,8 @@ package com.vinesh.banking.dto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
+// shared across deposit, withdrawal, and transfer endpoints.
+// targetAccountId is only used for transfers — ignored otherwise.
 public class TransactionRequest {
 
     @NotNull(message = "Account ID is required")
