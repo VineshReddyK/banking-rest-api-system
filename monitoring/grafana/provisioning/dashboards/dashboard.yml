@@ -1,3 +1,4 @@
+# auto-provisions any dashboard JSON files dropped into the dashboards folder
 apiVersion: 1
 
 providers:
