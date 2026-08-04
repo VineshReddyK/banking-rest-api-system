@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+// manages account creation and lookups. the cache layer sits in front
+// of reads so the listing endpoint stays fast even with a growing user base.
 @Service
 public class AccountService {
 
@@ -26,6 +28,8 @@ public class AccountService {
         this.userRepository = userRepository;
     }
 
+    // flush the entire accounts cache on create — stale listings are
+    // worse than a single extra db call after a new account
     @CacheEvict(value = "accounts", allEntries = true)
     public AccountResponse createAccount(Long userId, AccountRequest request) {
         User user = userRepository.findById(userId)
