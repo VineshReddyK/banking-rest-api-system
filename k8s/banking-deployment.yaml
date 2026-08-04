@@ -1,3 +1,5 @@
+# 2 replicas with readiness/liveness probes — k8s won't route traffic
+# until the actuator health endpoint responds
 apiVersion: apps/v1
 kind: Deployment
 metadata:
